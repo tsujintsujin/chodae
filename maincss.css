@@ -1,6 +1,9 @@
 * {
     padding: 0;
     margin: 0;
+   
+}
+body{
     overflow: hidden;
 }
 
@@ -29,3 +32,9 @@ a {
 .active {
     background-color: cadetblue !important;
 }
+
+#map{
+    height:400px;
+    width:50%;
+  
+  }
