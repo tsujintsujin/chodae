@@ -13,11 +13,12 @@
 <body>
   
   <script>
-            fetch("https://maps.googleapis.com/maps/api/geocode/json?latlng=14.5431321,121.0327896&key=AIzaSyCXNyFI86huxtFuMB4Z4KVndbRL0Lcw3qU")
+           fetch('https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJoR4Yj95Q-TIRTPW3SK0PlnE&fields=name&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4')
       .then(response => response.json())
-      .then(json => {
-console.log(json);
-        });
+      .then(data => {
+        // process the JSON data here
+        console.log(data);
+      });
 
   </script>
 </body>
