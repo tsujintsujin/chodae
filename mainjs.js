@@ -1,7 +1,7 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const embMap = document.getElementById('embedMap');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
-let map;
+let map;        
 
 
 
@@ -14,7 +14,12 @@ listItems.forEach(listItem => {
   });
 });
 
-
+  // fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJ1RqnWMdZ-TIRSA9zlRDLA-I&fields=name,formatted_address,formatted_phone_number,rating&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4`)
+  // .then(response => response.json())
+  // .then(data => {
+  //   // Do something with the place details
+  //   console.log(data);
+  // });
 
 function getPlaceData(placeId){
 
@@ -26,12 +31,7 @@ function getPlaceData(placeId){
   });
  
  
-  // fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,rating&key=${API_KEY}`)
-  // .then(response => response.json())
-  // .then(data => {
-  //   // Do something with the place details
-  //   console.log(data);
-  // });
+  
 }
 
 
@@ -64,7 +64,7 @@ function initMap() {
             
 
 let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
-
+console.log(placeURL);
             getPlaceData(placeURL);
             
           } else {

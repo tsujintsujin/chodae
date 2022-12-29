@@ -13,12 +13,15 @@
 <body>
   
   <script>
-           fetch('https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJoR4Yj95Q-TIRTPW3SK0PlnE&fields=name&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4')
-      .then(response => response.json())
-      .then(data => {
-        // process the JSON data here
-        console.log(data);
-      });
+    
+
+    
+    fetch('https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJwwNJkasW-TIR3xOMU1V0-l4&fields=name,formatted_address,formatted_phone_number,rating&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4')
+  .then(response => response.json())
+  .then(data => {
+    // Do something with the place details
+    console.log(data);
+  });
 
   </script>
 </body>
