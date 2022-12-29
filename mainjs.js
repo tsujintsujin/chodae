@@ -14,14 +14,14 @@ listItems.forEach(listItem => {
 });
 let map;
 
-// function getPlaceData(placeId){
-//   fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,rating&key=${API_KEY}`)
-//   .then(response => response.json())
-//   .then(data => {
-//     // Do something with the place details
-//     console.log(data);
-//   });
-// }
+function getPlaceData(placeId){
+  fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,rating&key=${API_KEY}`)
+  .then(response => response.json())
+  .then(data => {
+    // Do something with the place details
+    console.log(data);
+  });
+}
 
 
 function initMap() {
@@ -51,7 +51,7 @@ function initMap() {
 
             console.log(results[0].place_id);
             
-            // getPlaceData(results[0].place_id);
+            getPlaceData(results[0].place_id);
             
           } else {
             console.log('No results found');
