@@ -1,6 +1,7 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const embMap = document.getElementById('embedMap');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
+let map;
 
 
 
@@ -12,15 +13,25 @@ listItems.forEach(listItem => {
     listItem.classList.add('active');
   });
 });
-let map;
+
+
 
 function getPlaceData(placeId){
-  fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,rating&key=${API_KEY}`)
+
+  fetch(placeId, { mode: 'cors' })
   .then(response => response.json())
   .then(data => {
     // Do something with the place details
     console.log(data);
   });
+ 
+ 
+  // fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,formatted_phone_number,rating&key=${API_KEY}`)
+  // .then(response => response.json())
+  // .then(data => {
+  //   // Do something with the place details
+  //   console.log(data);
+  // });
 }
 
 
@@ -51,7 +62,10 @@ function initMap() {
 
             console.log(results[0].place_id);
             
-            getPlaceData(results[0].place_id);
+
+let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
+
+            getPlaceData(placeURL);
             
           } else {
             console.log('No results found');
