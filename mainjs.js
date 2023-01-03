@@ -23,7 +23,7 @@ listItems.forEach(listItem => {
 
 
 
-function getPlaceData(placeURL){
+function getPlaceData(){
   let mapData = document.querySelectorAll('[role="dialog"]');
   let insta = document.querySelectorAll('[jstcache="4"]');
   let tester = document.getElementsByClassName("title");
@@ -55,13 +55,13 @@ function getPlaceData(placeURL){
 //     console.log(status);
 //   }
 // });
-  // fetch(placeURL, { mode: 'cors' })
+//   fetch(placeURL, { mode: 'cors' })
   
-  // .then(response => response.json())
-  // .then(data => {
-  //   // Do something with the place details
-  //   console.log(data);
-  // });
+//   .then(response => response.json())
+//   .then(data => {
+//     // Do something with the place details
+//     console.log(data);
+//   });
 
 
 
@@ -92,9 +92,9 @@ function initMap() {
       function (results, status) {
         if (status === 'OK') {
           if (results[0]) {
-
-            let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
-            getPlaceData(placeURL);
+            console.log(results);
+     //       let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
+            getPlaceData();
             
           } else {
             console.log('No results found');
