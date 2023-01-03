@@ -1,5 +1,5 @@
 const listItems = document.querySelectorAll('nav .nav-item');
-const embMap = document.getElementById('embedMap');
+// const embMap = document.getElementById('embedMap');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
 let map;        
 
@@ -21,17 +21,50 @@ listItems.forEach(listItem => {
   //   console.log(data);
   // });
 
-function getPlaceData(placeId){
 
-  fetch(placeId, { mode: 'cors' })
-  .then(response => response.json())
-  .then(data => {
-    // Do something with the place details
-    console.log(data);
-  });
- 
- 
+
+function getPlaceData(placeURL){
+  let mapData = document.querySelectorAll('[role="dialog"]');
+  let insta = document.querySelectorAll('[jstcache="4"]');
+  let tester = document.getElementsByClassName("title");
+  console.log(tester[0].textContent); 
+  console.log(insta[0].textContent);
+  console.log(insta[1].textContent);
+  console.log(insta[2].textContent);
+  console.log(insta[3].textContent);
+
+ // console.log(tester[0].innerHTML);
+
+
   
+// $.ajax({
+//   type: "GET",
+//   url: placeURL,
+//   dataType: 'jsonp',
+//   crossDomain: true,
+//   success: function(data) {
+//     // data contains the JSON file
+//     // you can store the data in a global variable or pass it to a function
+//   },
+//   error: function(xhr, status, error) {
+//     // handle error
+//   },
+//   complete: function(xhr, status) {
+    
+//     // this function is called after the request is completed, whether it was successful or not
+//     console.log(status);
+//   }
+// });
+  // fetch(placeURL, { mode: 'cors' })
+  
+  // .then(response => response.json())
+  // .then(data => {
+  //   // Do something with the place details
+  //   console.log(data);
+  // });
+
+
+
 }
 
 
@@ -60,11 +93,7 @@ function initMap() {
         if (status === 'OK') {
           if (results[0]) {
 
-            console.log(results[0].place_id);
-            
-
-let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
-console.log(placeURL);
+            let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
             getPlaceData(placeURL);
             
           } else {
