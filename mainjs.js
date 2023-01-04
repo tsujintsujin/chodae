@@ -1,9 +1,18 @@
 const listItems = document.querySelectorAll('nav .nav-item');
-// const embMap = document.getElementById('embedMap');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
-let map;        
-
-
+let map;
+let lati;
+let longi;
+let coordinates;
+let closeWin;
+let loc_title;
+let loc_address;
+let windowOpen = false;
+const butt = document.getElementById("butt");
+const marker = document.getElementById("marker");
+let insta = document.querySelectorAll('[jstcache="4"]');
+let tester = document.getElementsByClassName("title");
+let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
 
 listItems.forEach(listItem => {
   listItem.addEventListener('click', () => {
@@ -14,77 +23,99 @@ listItems.forEach(listItem => {
   });
 });
 
-  // fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJ1RqnWMdZ-TIRSA9zlRDLA-I&fields=name,formatted_address,formatted_phone_number,rating&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4`)
-  // .then(response => response.json())
-  // .then(data => {
-  //   // Do something with the place details
-  //   console.log(data);
-  // });
+marker.addEventListener("click", function () {
+  if (windowOpen === true) {
+    markThis(coordinates, map);
+  }
+});
 
-
-
-function getPlaceData(){
-  let mapData = document.querySelectorAll('[role="dialog"]');
-  let insta = document.querySelectorAll('[jstcache="4"]');
-  let tester = document.getElementsByClassName("title");
-  console.log(tester[0].textContent); 
-  console.log(insta[0].textContent);
-  console.log(insta[1].textContent);
-  console.log(insta[2].textContent);
-  console.log(insta[3].textContent);
-
- // console.log(tester[0].innerHTML);
-
-
-  
-// $.ajax({
-//   type: "GET",
-//   url: placeURL,
-//   dataType: 'jsonp',
-//   crossDomain: true,
-//   success: function(data) {
-//     // data contains the JSON file
-//     // you can store the data in a global variable or pass it to a function
-//   },
-//   error: function(xhr, status, error) {
-//     // handle error
-//   },
-//   complete: function(xhr, status) {
-    
-//     // this function is called after the request is completed, whether it was successful or not
-//     console.log(status);
-//   }
+// fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJ1RqnWMdZ-TIRSA9zlRDLA-I&fields=name,formatted_address,formatted_phone_number,rating&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4`)
+// .then(response => response.json())
+// .then(data => {
+//   // Do something with the place details
+//   console.log(data);
 // });
-//   fetch(placeURL, { mode: 'cors' })
-  
-//   .then(response => response.json())
-//   .then(data => {
-//     // Do something with the place details
-//     console.log(data);
-//   });
 
 
+function markThis(latlng, map) {
+  const marker = new google.maps.Marker({
+    position: latlng,
+    map: map,
+  });
 
+}
+
+function getPlaceData() {
+
+  insta = document.querySelectorAll('[jstcache="4"]');
+  tester = document.getElementsByClassName("title");
+
+  try {
+    loc_title = tester[0].textContent;
+    loc_address = `${insta[1].textContent} ${insta[2].textContent} ${insta[3].textContent}`;
+  } catch (e) {
+    loc_title = "None selected";
+    loc_address = "None selected";
+    if (e instanceof TypeError) {
+      windowOpen = false;
+    }
+  }
+
+  if(loc_title != "None selected"){
+    console.log(loc_title);
+    console.log(loc_address);
+    windowOpen = true;
+  }
 }
 
 
 function initMap() {
-  // Map options
+
+  const marked = document.getElementById("marked");
+
+  // marked.addEventListener('click', function (e) {
+  //   new google.maps.Marker({
+  //     position: e.latLng,
+  //     map: map
+  //   });
+  // });
+
+
+  // Map initial location
   let options = {
     zoom: 8,
     center: { lat: 7.356033977636596, lng: 125.85744918370949 },
     scrollwheel: true
   }
   // New map
-  let map = new google.maps.Map(document.getElementById('map'), options);
+  map = new google.maps.Map(document.getElementById('map'), options);
+
+  butt.addEventListener("click", function () {
+    let latLng = new google.maps.LatLng(7.177371073399362, 125.72633743286133);
+    map.setZoom(12);
+    map.panTo(latLng);
+
+  });
+
 
   // Listen for click on map
   google.maps.event.addListener(map, 'click', function (event) {
+
+
+    //closing previous window
+    try {
+      winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]');
+      winClose[0].click();
+    } catch (e) {
+      if (e instanceof TypeError) {
+
+      }
+    }
+
     // Add marker
     let lat = event.latLng.lat();
     let lng = event.latLng.lng();
     console.log("Latitude: " + lat + " Longitude: " + lng);
-  //  addMarker({ coords: event.latLng });
 
     var geocoder = new google.maps.Geocoder;
     var latlng = { lat: lat, lng: lng };
@@ -92,10 +123,10 @@ function initMap() {
       function (results, status) {
         if (status === 'OK') {
           if (results[0]) {
-            console.log(results);
-     //       let placeURL = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+results[0].place_id+'&fields=name,formatted_address,formatted_phone_number,rating&key='+API_KEY;
+            //scrape info window
             getPlaceData();
-            
+
+            coordinates = latlng;
           } else {
             console.log('No results found');
           }
@@ -110,15 +141,22 @@ function initMap() {
     //     // process the JSON data here
     //     console.log(data);
     //   });
-  
- });
+
+  });
+
+
+  // map.addListener('click', function (e) {
+  //   new google.maps.Marker({
+  //     position: e.latLng,
+  //     map: map
+  //   });
+  // });
 
   /*
   // Add marker
   let marker = new google.maps.Marker({
     position:{lat:42.4668,lng:-70.9495},
     map:map,
-    icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
   });
 
   let infoWindow = new google.maps.InfoWindow({
@@ -177,9 +215,11 @@ function initMap() {
   //     });
   //   }
   // }
-}
 
+
+}
 window.onload = function () {
-  initMap()
+  window.initMap();
 };
+
 
