@@ -15,9 +15,33 @@ a {
     text-decoration: none;
     color: black;
 }
-
-
-
+.vh-15{
+    height: 15%;
+}
+.vh-25{
+    height: 25%;
+}
+.h-35{
+    height: 35%;
+}
+.vh-50{
+    height: 50%;
+}
+.h-65{
+    height: 65%;
+}
+.vh-70{
+    height: 70%;
+}
+.vh-75{
+    height: 75%;
+}
+.vh-95{
+    height: 95%;
+}
+.dis{
+    pointer-events: none;
+}
 .nav-item:hover {
     cursor: pointer;
     background-color: rgba(154, 229, 248, 0.295);

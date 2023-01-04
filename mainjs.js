@@ -1,6 +1,6 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
-let map;
+let map, map2, map3;
 let lati;
 let longi;
 let coordinates;
@@ -25,7 +25,9 @@ listItems.forEach(listItem => {
 
 marker.addEventListener("click", function () {
   if (windowOpen === true) {
-    markThis(coordinates, map);
+    markThis(coordinates, map2);
+  }else{
+    alert("None selected, can't add marker here.");
   }
 });
 
@@ -37,10 +39,10 @@ marker.addEventListener("click", function () {
 // });
 
 
-function markThis(latlng, map) {
+function markThis(latlng, map2) {
   const marker = new google.maps.Marker({
     position: latlng,
-    map: map,
+    map: map2,
   });
 
 }
@@ -61,10 +63,13 @@ function getPlaceData() {
     }
   }
 
-  if(loc_title != "None selected"){
+  if (loc_title != "None selected") {
     console.log(loc_title);
     console.log(loc_address);
     windowOpen = true;
+  }else{
+
+
   }
 }
 
@@ -83,32 +88,39 @@ function initMap() {
 
   // Map initial location
   let options = {
+    zoom: 10,
+    center: { lat: 7.356033977636596, lng: 125.85744918370949 },
+    draggable: false,
+    disableDefaultUI: true,
+    disableDoubleClickZoom: true
+  }
+  let options2 = {
     zoom: 8,
     center: { lat: 7.356033977636596, lng: 125.85744918370949 },
     scrollwheel: true
   }
   // New map
   map = new google.maps.Map(document.getElementById('map'), options);
+  map2 = new google.maps.Map(document.getElementById('map2'), options2);
+  map3 = new google.maps.Map(document.getElementById('map3'), options);
+
 
   butt.addEventListener("click", function () {
     let latLng = new google.maps.LatLng(7.177371073399362, 125.72633743286133);
-    map.setZoom(12);
-    map.panTo(latLng);
-
+    map2.setZoom(12);
+    map2.panTo(latLng);
   });
 
 
   // Listen for click on map
-  google.maps.event.addListener(map, 'click', function (event) {
-
-
+  google.maps.event.addListener(map2, 'click', function (event) {
     //closing previous window
     try {
       winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]');
       winClose[0].click();
     } catch (e) {
       if (e instanceof TypeError) {
-
+   
       }
     }
 
@@ -143,6 +155,7 @@ function initMap() {
     //   });
 
   });
+
 
 
   // map.addListener('click', function (e) {
@@ -218,8 +231,20 @@ function initMap() {
 
 
 }
+
 window.onload = function () {
-  window.initMap();
+  try {
+    window.initMap();
+
+  } catch (e) {
+    console.log("Uncaught Promise");
+  }
+  //  window.scrollTo(0, 0);
 };
+
+
+
+
+
 
 

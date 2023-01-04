@@ -37,6 +37,8 @@
                             <li class="ps-5 nav-item my-3 py-3 w-100 rounded-1">
                                 <h4><i class="fa-center me-2 fa fa-phone"></i>Contact Us</h4>
                             </li>
+                            <button class="btn" id="butt">pan to location</button>
+                            <button class="btn" id="marker">add marker here</button>
                         </ul>
                     </nav>
                 </div>
@@ -45,26 +47,98 @@
     </header>
 
 
-    <div class="row">
-        <div class="col-md-3 col-lg-2">
+    <div class="row mx-5 px-5">
+        <div class="col-2">
         </div>
-        <div class="col-md-9 col-lg-10">
+        <div class="col-10">
             <section id="myList" class="content-section vh-100">
-                <h1>My Google Map</h1>
-                <div id="map"></div>
-                <button class="btn" id="butt">pan to location</button>
-                <button class="btn" id="marker">add marker here</button>
+                <div class="container-fluid bg-info vh-100 py-3">
+                    <div class="row vh-25 bg-danger p-2">
+                        <p>banner</p>
 
+                    </div>
+
+                    <div class="row vh-25 bg-warning vh-75">
+                        <div class="col bg-success me-3 mt-3">
+                            <div class="row vh-25 bg-info p-2">
+                                <p>date</p>
+                            </div>
+                            <div class="row vh-75 bg-dark text-white p-2">
+                                <p>to do</p>
+                            </div>
+                        </div>
+                        <div class="col bg-success me-3 mt-3 p-2">
+                            <p>bucketlist</p>
+
+                        </div>
+                        <div class="col bg-success mt-3 p-0">
+                            <div class="h-100 w-100 rounded-3" id="map"></div>
+
+                        </div>
+                    </div>
+
+
+                </div>
             </section>
-            <section id="Explore" class="content-section vh-100 ">
-                <h1>Explore page Here</h1>
 
+            <section id="Explore" class="content-section vh-100 ">
+                <div class="container-fluid bg-success bg-opacity-50 vh-100 py-3">
+
+                    <div class="row h-100 bg-warning ">
+                        <div class="col bg-success me-3">
+                            <div class="row vh-50 bg-info p-2">
+                                <p>location pic</p>
+                            </div>
+                            <div class="row vh-25 bg-dark text-white p-2">
+                                <p>location details</p>
+                            </div>
+                        </div>
+
+                        <div class="col bg-success">
+                            <div class="h-100 w-100 rounded-3" id="map2">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
             </section>
             <section id="Budget" class="content-section vh-100 ">
-                <h1>Budget Here</h1>
+                <div class="container-fluid bg-success bg-opacity-50 vh-100 py-3">
 
-            </section>
+                    <div class="row h-65 bg-warning ">
+                        <div class="col bg-success me-3">
+                            <div class="row h-100 bg-info p-2">
+                                <p>My List</p>
+                            </div>
+                        </div>
+
+                        <div class="col bg-success ">
+                            <div class="row h-100 bg-info p-2">
+                                <p>Budget Plan</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row h-35 bg-dark ">
+                        <div class="col bg-success mt-3">
+                            <div class="row h-100 bg-info">
+                                <div class="h-100 w-100 rounded-3" id="map3"></div>
+                            </div>
+                        </div>
+
+                        
+
+                    </div>
+
+                </div>
+
+
         </div>
+        </section>
+    </div>
     </div>
 
     <script async defer
