@@ -237,14 +237,16 @@ function initMap() {
 
 
   setTimeout(() => {
-
+let temp = document.getElementById("map2");
 
     autocomplete.bindTo("bounds", map2);
 
     infowindow = new google.maps.InfoWindow();
-    infowindowContent = document.getElementById("infowindow-content");
+    let temp2 =   insta = document.querySelectorAll('[class="infoWin"]');
+
+    infowindowContent = document.getElementById("infoWindowDiv");
     console.log(infowindowContent);
-     infowindow.setContent(infowindowContent);
+     console.log(temp);
 
     const marker = new google.maps.Marker({
       map2,
@@ -276,7 +278,6 @@ function initMap() {
       marker.setPosition(place.geometry.location);
       marker.setVisible(true);
 console.log(place.name);
-console.log(place.formatted_address);
     //  infowindowContent.children["place-name"].textContent = place.name;
       //  infowindowContent.children["place-address"].textContent =
       // place.formatted_address;
