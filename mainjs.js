@@ -13,6 +13,9 @@ const marker = document.getElementById("marker");
 let insta = document.querySelectorAll('[jstcache="4"]');
 let tester = document.getElementsByClassName("title");
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
+let satbtn;
+
+
 
 listItems.forEach(listItem => {
   listItem.addEventListener('click', () => {
@@ -26,7 +29,7 @@ listItems.forEach(listItem => {
 marker.addEventListener("click", function () {
   if (windowOpen === true) {
     markThis(coordinates, map2);
-  }else{
+  } else {
     alert("None selected, can't add marker here.");
   }
 });
@@ -67,7 +70,7 @@ function getPlaceData() {
     console.log(loc_title);
     console.log(loc_address);
     windowOpen = true;
-  }else{
+  } else {
 
 
   }
@@ -120,7 +123,7 @@ function initMap() {
       winClose[0].click();
     } catch (e) {
       if (e instanceof TypeError) {
-   
+
       }
     }
 
@@ -235,12 +238,32 @@ function initMap() {
 window.onload = function () {
   try {
     window.initMap();
-
   } catch (e) {
     console.log("Uncaught Promise");
   }
   //  window.scrollTo(0, 0);
+
+  const template = document.createElement('btn');
+  template.innerHTML = 
+  `<div class="gm-style-mtc mapAdds">
+    <input type="search" class="form-control rounded searchBar" placeholder="Search"/>
+   </div>
+  <div class="gm-style-mtc mapAdds">
+    <button type="button" class="searchBtn">Search</button>
+  </div>`
+
+  setTimeout(() => {
+    console.log('Hello, world!');
+    satbtn = document.querySelectorAll('[role="menubar"]');
+    // satbtn[0].appendChild(div);
+    satbtn[0].insertAdjacentElement('beforeend', template);
+
+  }, 2000);
 };
+
+
+
+
 
 
 

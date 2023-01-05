@@ -1,9 +1,10 @@
 * {
     padding: 0;
     margin: 0;
-   
+
 }
-body{
+
+body {
     overflow: hidden;
 }
 
@@ -15,33 +16,43 @@ a {
     text-decoration: none;
     color: black;
 }
-.vh-15{
+
+.vh-15 {
     height: 15%;
 }
-.vh-25{
+
+.vh-25 {
     height: 25%;
 }
-.h-35{
+
+.h-35 {
     height: 35%;
 }
-.vh-50{
+
+.vh-50 {
     height: 50%;
 }
-.h-65{
+
+.h-65 {
     height: 65%;
 }
-.vh-70{
+
+.vh-70 {
     height: 70%;
 }
-.vh-75{
+
+.vh-75 {
     height: 75%;
 }
-.vh-95{
+
+.vh-95 {
     height: 95%;
 }
-.dis{
+
+.dis {
     pointer-events: none;
 }
+
 .nav-item:hover {
     cursor: pointer;
     background-color: rgba(154, 229, 248, 0.295);
@@ -57,8 +68,62 @@ a {
     background-color: cadetblue !important;
 }
 
-#map{
-    height:400px;
-    width:50%;
-  
-  }
+#map {
+    height: 400px;
+    width: 50%;
+
+}
+
+.searchBtn{
+    background: rgb(255, 255, 255) padding-box;
+    display: table-cell;
+    border: 0px none;
+    margin: 0px;
+    padding: 0px 17px;
+    text-transform: none;
+    appearance: none;
+    position: relative;
+    user-select: none;
+    direction: ltr;
+    overflow: hidden;
+    text-align: center;
+    height: 40px;
+    vertical-align: middle;
+    color: rgb(86, 86, 86);
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 18px;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+    min-width: 66px;
+}
+.gmnoprint :hover {
+z-index: 100000;
+}
+.searchBar{
+    background: rgb(255, 255, 255) padding-box;
+    border: 0px none;
+    margin: 0px;
+    padding: 0px 17px;
+    text-transform: none;
+    appearance: none;
+    position: relative;
+    user-select: none;
+    overflow: hidden;
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    color: rgb(86, 86, 86);
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 18px;
+    border-bottom-right-radius: 1px;
+    border-top-right-radius: 1px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+    min-width: 200px;
+}
+
+.mapAdds {
+    float:left;
+    position: relative;
+    z-index: 0;
+}
