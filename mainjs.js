@@ -14,8 +14,10 @@ let insta = document.querySelectorAll('[jstcache="4"]');
 let tester = document.getElementsByClassName("title");
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
 let satbtn;
-
-
+let input;
+let autocomplete;
+let infowindow;
+let infowindowContent;
 
 listItems.forEach(listItem => {
   listItem.addEventListener('click', () => {
@@ -233,32 +235,101 @@ function initMap() {
   // }
 
 
+
+  setTimeout(() => {
+
+
+    autocomplete.bindTo("bounds", map2);
+
+    infowindow = new google.maps.InfoWindow();
+    infowindowContent = document.getElementById("infowindow-content");
+    console.log(infowindowContent);
+     infowindow.setContent(infowindowContent);
+
+    const marker = new google.maps.Marker({
+      map2,
+      anchorPoint: new google.maps.Point(0, -29),
+    });
+
+    autocomplete.addListener("place_changed", () => {
+      infowindow.close();
+      marker.setVisible(false);
+
+      const place = autocomplete.getPlace();
+
+      if (!place.geometry || !place.geometry.location) {
+        // User entered the name of a Place that was not suggested and
+        // pressed the Enter key, or the Place Details request failed.
+        window.alert("No details available for input: '" + place.name + "'");
+        return;
+      }
+
+      // If the place has a geometry, then present it on a map.
+      if (place.geometry.viewport) {
+        map2.fitBounds(place.geometry.viewport);
+      } else {
+        map2.setCenter(place.geometry.location);
+        map2.setZoom(10);
+      }
+
+
+      marker.setPosition(place.geometry.location);
+      marker.setVisible(true);
+console.log(place.name);
+console.log(place.formatted_address);
+    //  infowindowContent.children["place-name"].textContent = place.name;
+      //  infowindowContent.children["place-address"].textContent =
+      // place.formatted_address;
+      //   infowindow.open(map2, marker);
+    });
+
+
+  }, 5000);
+
+
+
+
+
+
 }
 
 window.onload = function () {
-  try {
-    window.initMap();
-  } catch (e) {
-    console.log("Uncaught Promise");
-  }
+
   //  window.scrollTo(0, 0);
 
   const template = document.createElement('btn');
-  template.innerHTML = 
-  `<div class="gm-style-mtc mapAdds">
-    <input type="search" class="form-control rounded searchBar" placeholder="Search"/>
+  template.innerHTML =
+    `<div class="gm-style-mtc mapAdds">
+    <input id="searchInput" type="search" class="form-control rounded searchBar" placeholder="Search"/>
    </div>
   <div class="gm-style-mtc mapAdds">
     <button type="button" class="searchBtn">Search</button>
   </div>`
 
+
+
   setTimeout(() => {
-    console.log('Hello, world!');
+
     satbtn = document.querySelectorAll('[role="menubar"]');
     // satbtn[0].appendChild(div);
     satbtn[0].insertAdjacentElement('beforeend', template);
 
+    setTimeout(() => {
+      const opts = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["establishment"],
+      };
+
+      input = document.getElementById("searchInput");
+      console.log(input);
+      autocomplete = new google.maps.places.Autocomplete(input, opts);
+    }, 1000);
+
   }, 2000);
+
+
+
 };
 
 
