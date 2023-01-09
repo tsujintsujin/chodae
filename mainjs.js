@@ -1,32 +1,17 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
 let map, map2, map3;
-let lati;
-let longi;
-let coordinates;
-let loc_title;
-let loc_address;
+let lati ,longi, loc_title, loc_address, coordinates;
+let satbtn, input, autocomplete, infowindow, infowindowContent, intervalSearch;
 let windowOpen = false;
+let tester = document.getElementsByClassName("title");
 let butt = document.getElementById("butt");
 let marker = document.getElementById("marker");
-let insta = document.querySelectorAll('[jstcache="4"]');
-let tester = document.getElementsByClassName("title");
-let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
-let satbtn;
-let input;
-let autocomplete;
-let infowindow;
-let infowindowContent;
-let template = document.createElement('btn');
-template.innerHTML =
-  `
-    <div class="gm-style-mtc mapAdds">
-      <input id="searchInput" type="search" class="searchBar" placeholder="Search"/>
-    </div>
-  `
 const Explore = document.getElementById('Explore');
 const expSect = document.getElementById('exploreSection');
-let intervalSearch;
+let insta = document.querySelectorAll('[jstcache="4"]');
+let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
+let template = document.createElement('btn');
 
 function addSearch() {
   template = document.createElement('btn');
@@ -88,12 +73,6 @@ marker.addEventListener("click", function () {
   }
 });
 
-// fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJ1RqnWMdZ-TIRSA9zlRDLA-I&fields=name,formatted_address,formatted_phone_number,rating&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4`)
-// .then(response => response.json())
-// .then(data => {
-//   // Do something with the place details
-//   console.log(data);
-// });
 
 function markThis(latlng, map2) {
   const marker = new google.maps.Marker({
@@ -292,8 +271,6 @@ try{
 function searchPan(){
 
 
-
-
     autocomplete.bindTo("bounds", map2);
 
     infowindow = new google.maps.InfoWindow();
@@ -355,16 +332,6 @@ window.onload = function () {
       initMap();
     }
 
-
-    // setTimeout(() => {
-    //   const opts = {
-    //     fields: ["formatted_address", "geometry", "name"],
-    //     strictBounds: false,
-    //     types: ["establishment"],
-    //   };
-    //   input = document.getElementById("searchInput");
-    //   autocomplete = new google.maps.places.Autocomplete(input, opts);
-    // }, 1000);
 
   }, 2000);
 
