@@ -1,0 +1,67 @@
+body {
+background: linear-gradient(354deg, #943A6F -37.22%, #FFFFFF 71.57%);
+}
+
+h1 {
+    position: absolute;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    font-family:Arial, Helvetica, sans-serif;
+    right: 10%;
+    top: 30%;
+    transform: translateX(-100px);
+}
+
+p {
+    position: absolute;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    font-family:Arial, Helvetica, sans-serif;
+    right: 10%;
+    top: 38%;
+    transform: translateX(-100px);
+}
+
+#lowerbtn {
+    position: absolute;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    font-family:Arial, Helvetica, sans-serif;
+    right: 10%;
+    top: 45%;
+    transform: translateX(-100px);
+}
+
+#btntrans {
+    background-color: transparent;
+    border-color: blue;
+}
+
+#caro {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    transform: translateX(-100px);
+}
+
+#btn2 {
+    position: absolute;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    font-family:Arial, Helvetica, sans-serif;
+    left : 95%;
+    top: 95%;
+    transform: translateX(-100px);
+}
+
+#p2 {
+    position: absolute;
+    left: 95%;
+    top: 10%;
+    transform: translateX(-100px);
+}
