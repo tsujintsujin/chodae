@@ -23,19 +23,18 @@
                 <div class="row d-flex flex-column align-items-center">
                     <nav class="row navi d-flex flex-column">
                         <ul>
-                            <li class="ps-5 nav-item my-3 py-3 w-100 rounded-1 active"
-                                onclick="location.href='#myList';">
-                                <h4><i class="fa-center me-2 fa fa-edit"></i>My List</h4>
+                            <li  id="MyList" class="ps-2 nav-item my-2 py-2 w-100 rounded-1 active">
+                                <h5><i class="fa-center me-2 fa fa-edit"></i>My List</h5>
                             </li>
-                            <li class="ps-5 nav-item my-3 py-3 w-100 rounded-1" onclick="location.href='#Explore';">
-                                <h4><i class="fa-center me-2 fa fa-compass"></i>Explore</h4>
+                            <li id="Explore" class="ps-2 nav-item my-2 py-2 w-100 rounded-1">
+                                <h5><i class="fa-center me-2 fa fa-compass"></i>Explore</h5>
                             </li>
-                            <li class="ps-5 nav-item my-3 py-3 w-100 rounded-1" onclick="location.href='#Budget';">
-                                <h4><i class="fa-center me-2 fa fa-money"></i>Budget</h4>
+                            <li  id="Budget" class="ps-2 nav-item my-2 py-2 w-100 rounded-1">
+                                <h5><i class="fa-center me-2 fa fa-money"></i>Budget</h5>
                             </li>
                             <hr class="my-5">
-                            <li class="ps-5 nav-item my-3 py-3 w-100 rounded-1">
-                                <h4><i class="fa-center me-2 fa fa-phone"></i>Contact Us</h4>
+                            <li id="Contact" class="ps-2 nav-item my-2 py-2 w-100 rounded-1">
+                                <h5><i class="fa-center me-2 fa fa-phone"></i>Contact Us</h5>
                             </li>
                             <button class="btn" id="butt">pan to location</button>
                             <button class="btn" id="marker">add marker here</button>
@@ -51,7 +50,7 @@
         <div class="col-2">
         </div>
         <div class="col-10">
-            <section id="myList" class="content-section vh-100">
+            <section id="myListSection" class="content-section vh-100">
                 <div class="container-fluid bg-info vh-100 py-3">
                     <div class="row vh-25 bg-danger p-2">
                         <p>banner</p>
@@ -80,12 +79,12 @@
                         </div>
                     </div>
 
-                    
+
 
                 </div>
             </section>
 
-            <section id="Explore" class="content-section vh-100 ">
+            <section id="exploreSection" class="content-section vh-100 ">
                 <div class="container-fluid bg-success bg-opacity-50 vh-100 py-3">
 
                     <div class="row h-100 bg-warning ">
@@ -99,21 +98,22 @@
                         </div>
 
                         <div class="col bg-success">
-                            <div class="h-100 w-100 rounded-3" id="map2">
-                                <br class="infoWin" id="infoWindowDiv">
-                                    <span id="place-name">asdsadas</span><br>
-                                    <span id="place-address">asdsdas</span>
-                                  </div>
-                              
-                            </div>
 
+                            <div class="h-100 w-100 rounded-3" id="map2">
+
+
+                            </div>
+                            <div class="infoWin" id="infoWindowDiv">
+                                <span id="place-name">asdsadas</span><br>
+                                <span id="place-address">asdsdas</span>
+                            </div>
                         </div>
                     </div>
 
 
                 </div>
             </section>
-            <section id="Budget" class="content-section vh-100 ">
+            <section id="budgetSection" class="content-section vh-100 ">
                 <div class="container-fluid bg-success bg-opacity-50 vh-100 py-3">
 
                     <div class="row h-65 bg-warning ">
@@ -148,7 +148,6 @@
         </section>
     </div>
     </div>
-
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&callback=initMap&v=weekly&libraries=places"></script>
 
@@ -157,6 +156,8 @@
         crossorigin="anonymous"></script>
 
     <script src="mainjs.js"></script>
+
+
 
 </body>
 

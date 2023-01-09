@@ -1,7 +1,6 @@
 * {
     padding: 0;
     margin: 0;
-
 }
 
 body {
@@ -74,7 +73,7 @@ a {
 
 }
 
-.searchBtn{
+.searchBtn {
     background: rgb(255, 255, 255) padding-box;
     display: table-cell;
     border: 0px none;
@@ -97,10 +96,12 @@ a {
     box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
     min-width: 66px;
 }
+
 .gmnoprint :hover {
-z-index: 100000;
+    z-index: 100000;
 }
-.searchBar{
+
+.searchBar {
     background: rgb(255, 255, 255) padding-box;
     border: 0px none;
     margin: 0px;
@@ -110,20 +111,20 @@ z-index: 100000;
     position: relative;
     user-select: none;
     overflow: hidden;
-    text-align: left;
+    text-align: center;
     height: 40px;
     width: 40px;
     color: rgb(86, 86, 86);
     font-family: Roboto, Arial, sans-serif;
-    font-size: 18px;
-    border-bottom-right-radius: 1px;
-    border-top-right-radius: 1px;
+    font-size: 15px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
     min-width: 200px;
+    border: none !important;
 }
 
 .mapAdds {
-    float:left;
+    float: left;
     position: relative;
     z-index: 0;
+    border-radius: 0 !important;
 }

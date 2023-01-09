@@ -4,12 +4,11 @@ let map, map2, map3;
 let lati;
 let longi;
 let coordinates;
-let closeWin;
 let loc_title;
 let loc_address;
 let windowOpen = false;
-const butt = document.getElementById("butt");
-const marker = document.getElementById("marker");
+let butt = document.getElementById("butt");
+let marker = document.getElementById("marker");
 let insta = document.querySelectorAll('[jstcache="4"]');
 let tester = document.getElementsByClassName("title");
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
@@ -18,6 +17,37 @@ let input;
 let autocomplete;
 let infowindow;
 let infowindowContent;
+let template = document.createElement('btn');
+template.innerHTML =
+  `
+    <div class="gm-style-mtc mapAdds">
+      <input id="searchInput" type="search" class="searchBar" placeholder="Search"/>
+    </div>
+  `
+const Explore = document.getElementById('Explore');
+const expSect = document.getElementById('exploreSection');
+let intervalSearch;
+
+function addSearch() {
+  template = document.createElement('btn');
+  template.innerHTML =
+    `
+    <div class="gm-style-mtc mapAdds">
+      <input id="searchInput" type="search" class="searchBar" placeholder="Search"/>
+    </div>
+  `
+  satbtn = document.querySelectorAll('[role="menubar"]');
+  satbtn[0].insertAdjacentElement('beforeend', template);
+    const opts = {
+      fields: ["formatted_address", "geometry", "name"],
+      strictBounds: false,
+      types: ["establishment"],
+    };
+    input = document.getElementById("searchInput");
+    autocomplete = new google.maps.places.Autocomplete(input, opts);
+    searchPan();
+}
+
 
 listItems.forEach(listItem => {
   listItem.addEventListener('click', () => {
@@ -25,6 +55,28 @@ listItems.forEach(listItem => {
       listItem.classList.remove('active');
     });
     listItem.classList.add('active');
+    let activeID = listItem.getAttribute('id');
+    switch (activeID) {
+      case 'MyList':
+        document.getElementById('myListSection').scrollIntoView();
+        clearInterval(intervalSearch);
+        break;
+      case 'Explore':
+        document.getElementById('exploreSection').scrollIntoView();
+        intervalSearch = setInterval(function () {
+          if (document.getElementById('searchInput')) {
+          } else {
+            addSearch();
+          }
+        }, 2000);
+        break;
+      case 'Budget':
+        document.getElementById('budgetSection').scrollIntoView();
+        clearInterval(intervalSearch);
+        break;
+      default:
+        console.log('Search Empty');
+    }
   });
 });
 
@@ -43,13 +95,11 @@ marker.addEventListener("click", function () {
 //   console.log(data);
 // });
 
-
 function markThis(latlng, map2) {
   const marker = new google.maps.Marker({
     position: latlng,
     map: map2,
   });
-
 }
 
 function getPlaceData() {
@@ -69,17 +119,16 @@ function getPlaceData() {
   }
 
   if (loc_title != "None selected") {
-    console.log(loc_title);
-    console.log(loc_address);
+
     windowOpen = true;
   } else {
-
 
   }
 }
 
 
 function initMap() {
+try{
 
   const marked = document.getElementById("marked");
 
@@ -97,14 +146,17 @@ function initMap() {
     center: { lat: 7.356033977636596, lng: 125.85744918370949 },
     draggable: false,
     disableDefaultUI: true,
-    disableDoubleClickZoom: true
+    disableDoubleClickZoom: true,
   }
   let options2 = {
     zoom: 8,
     center: { lat: 7.356033977636596, lng: 125.85744918370949 },
-    scrollwheel: true
+    scrollwheel: true,
+    fullscreenControl: false,
+    disableDoubleClickZoom: true
   }
-  // New map
+
+  // New maps
   map = new google.maps.Map(document.getElementById('map'), options);
   map2 = new google.maps.Map(document.getElementById('map2'), options2);
   map3 = new google.maps.Map(document.getElementById('map3'), options);
@@ -132,7 +184,6 @@ function initMap() {
     // Add marker
     let lat = event.latLng.lat();
     let lng = event.latLng.lng();
-    console.log("Latitude: " + lat + " Longitude: " + lng);
 
     var geocoder = new google.maps.Geocoder;
     var latlng = { lat: lat, lng: lng };
@@ -161,7 +212,9 @@ function initMap() {
 
   });
 
-
+}catch{
+  initMap();
+}
 
   // map.addListener('click', function (e) {
   //   new google.maps.Marker({
@@ -234,19 +287,18 @@ function initMap() {
   //   }
   // }
 
+}
+
+function searchPan(){
 
 
-  setTimeout(() => {
-let temp = document.getElementById("map2");
+
 
     autocomplete.bindTo("bounds", map2);
 
     infowindow = new google.maps.InfoWindow();
-    let temp2 =   insta = document.querySelectorAll('[class="infoWin"]');
-
     infowindowContent = document.getElementById("infoWindowDiv");
     console.log(infowindowContent);
-     console.log(temp);
 
     const marker = new google.maps.Marker({
       map2,
@@ -271,65 +323,50 @@ let temp = document.getElementById("map2");
         map2.fitBounds(place.geometry.viewport);
       } else {
         map2.setCenter(place.geometry.location);
-        map2.setZoom(10);
+        map2.setZoom(12);
       }
 
 
       marker.setPosition(place.geometry.location);
       marker.setVisible(true);
-console.log(place.name);
-    //  infowindowContent.children["place-name"].textContent = place.name;
+      //  infowindowContent.children["place-name"].textContent = place.name;
       //  infowindowContent.children["place-address"].textContent =
       // place.formatted_address;
       //   infowindow.open(map2, marker);
     });
 
-
-  }, 5000);
-
+  }
 
 
 
 
 
-}
+
 
 window.onload = function () {
-
   //  window.scrollTo(0, 0);
-
-  const template = document.createElement('btn');
-  template.innerHTML =
-    `<div class="gm-style-mtc mapAdds">
-    <input id="searchInput" type="search" class="form-control rounded searchBar" placeholder="Search"/>
-   </div>
-  <div class="gm-style-mtc mapAdds">
-    <button type="button" class="searchBtn">Search</button>
-  </div>`
-
-
 
   setTimeout(() => {
 
-    satbtn = document.querySelectorAll('[role="menubar"]');
-    // satbtn[0].appendChild(div);
-    satbtn[0].insertAdjacentElement('beforeend', template);
+  
+    try {
+      satbtn[0].insertAdjacentElement('beforeend', template);
+    } catch {
+      initMap();
+    }
 
-    setTimeout(() => {
-      const opts = {
-        fields: ["formatted_address", "geometry", "name"],
-        strictBounds: false,
-        types: ["establishment"],
-      };
 
-      input = document.getElementById("searchInput");
-      console.log(input);
-      autocomplete = new google.maps.places.Autocomplete(input, opts);
-    }, 1000);
+    // setTimeout(() => {
+    //   const opts = {
+    //     fields: ["formatted_address", "geometry", "name"],
+    //     strictBounds: false,
+    //     types: ["establishment"],
+    //   };
+    //   input = document.getElementById("searchInput");
+    //   autocomplete = new google.maps.places.Autocomplete(input, opts);
+    // }, 1000);
 
   }, 2000);
-
-
 
 };
 
