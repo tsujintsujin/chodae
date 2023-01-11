@@ -19,6 +19,10 @@ let userMarkerContent = {};
 let markerContent = '';
 let latlng;
 let currentMarker;
+let service;
+let res;
+const placePhotos = [];
+
 
 function addSearch() {
   template = document.createElement('btn');
@@ -54,11 +58,10 @@ listItems.forEach(listItem => {
         clearInterval(intervalSearch);
         break;
       case 'Explore':
-      
         document.getElementById('exploreSection').scrollIntoView();
-        if (document.getElementById('searchInput') ? '' :addSearch());
+        if (document.getElementById('searchInput') ? '' : addSearch());
         intervalSearch = setInterval(function () {
-          if (document.getElementById('searchInput') ? '' :addSearch());
+          if (document.getElementById('searchInput') ? '' : addSearch());
         }, 2000);
         break;
       case 'Budget':
@@ -71,16 +74,13 @@ listItems.forEach(listItem => {
   });
 });
 
-function setCurrentMarker(marker){
+function setCurrentMarker(marker) {
   currentMarker = marker;
 }
 removeMarker.addEventListener("click", function () {
   currentMarker.setMap(null);
-
-//remove from object array
-delete  userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
-
-console.log(userMarkerContent);
+  //remove from object array
+  delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
 });
 
 
@@ -103,40 +103,29 @@ function markThis(latlng, map2) {
   markerContent = '';
   marker.addListener('click', function () {
     //window content pls
-    
     closePreviousWindow();
-
     let lat = marker.position.lat();
     let lng = marker.position.lng();
     latlng = { lat: lat, lng: lng };
     map2.panTo(latlng);
-
     let winContent = userMarkerContent[`${latlng.lat}, ${latlng.lng}`]
     let infoWindow = new google.maps.InfoWindow({
       content: winContent
     });
     infoWindow.open(map2, marker);
     setCurrentMarker(marker);
-
-    console.log(latlng);
   });
-
-
   userMarkers.push(latlng);
   let unique = [...new Set(userMarkers)];
   userMarkers = unique;
-  console.log(userMarkers);
-
 }
 
 function getPlaceData() {
-
   partAddress = document.querySelectorAll('[jstcache="4"]');
   partTitle = document.getElementsByClassName("title");
   googleLabel = document.querySelectorAll('[jstcache="6"]');
   let Title = '';
   if (partTitle[0] ? Title = partTitle[0].textContent : '')
-
     if (markerContent == "") {
       markerContent += `<b>${Title}</b>`;
       for (let i = 0; i < partAddress.length; i++) {
@@ -159,11 +148,7 @@ function getPlaceData() {
     }
   }
 
-  if (loc_title != "None selected") {
-    windowOpen = true;
-  } else {
-
-  }
+  if (loc_title != "None selected" ? windowOpen = true : '');
 }
 
 
@@ -206,16 +191,11 @@ function initMap() {
       // Add marker
       let lat = event.latLng.lat();
       let lng = event.latLng.lng();
-
-      geocoder = new google.maps.Geocoder;
       latlng = { lat: lat, lng: lng };
-      console.log(latlng);
+      geocoder = new google.maps.Geocoder;
       mapShowLocationDetails(geocoder, latlng);
 
-
     });
-
-
 
 
 
@@ -308,7 +288,7 @@ function searchPan() {
     anchorPoint: new google.maps.Point(0, -29),
   });
 
-    autocomplete.addListener("place_changed", () => {
+  autocomplete.addListener("place_changed", () => {
     marker.setVisible(false);
 
     const place = autocomplete.getPlace();
@@ -328,24 +308,12 @@ function searchPan() {
       map2.setZoom(12);
     }
 
-
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
-    //  infowindowContent.children["place-name"].textContent = place.name;
-    //  infowindowContent.children["place-address"].textContent =
-    // place.formatted_address;
-    //   infowindow.open(map2, marker);
   });
-
 }
 
 
-
-function closePreviousWindow() {
-  if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
-    winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]')[0].click()
-  }
-}
 
 function mapShowLocationDetails(geocoder, latlng) {
   geocoder.geocode({ 'location': latlng },
@@ -353,7 +321,9 @@ function mapShowLocationDetails(geocoder, latlng) {
       if (status === 'OK') {
         if (results[0]) {
           //scrape info window
+          let placeId = results[0].place_id;
           getPlaceData();
+          getService(placeId);
           coordinates = latlng;
         } else {
           console.log('No results found');
@@ -362,33 +332,61 @@ function mapShowLocationDetails(geocoder, latlng) {
         console.log('Geocoder failed due to: ' + status);
       }
     })
-
 }
+
+
+function getService(placeId) {
+  let request = {
+    placeId: placeId
+
+  };
+  service = new google.maps.places.PlacesService(map2);
+  service.getDetails(request, function (place, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      console.log(place);
+
+      //potos
+      let i = 0;
+      while (i < place.photos.length) {
+        console.log(place.photos[i].getUrl());
+        placePhotos.push(place.photos[i].getUrl());
+        i++;
+      }
+
+
+
+      console.log(placePhotos);
+
+
+
+    } else {
+      console.log("Place not found");
+    }
+  });
+}
+
+
+
+
+
 
 window.onload = function () {
   window.scrollTo(0, 0);
-
   setTimeout(() => {
-
-
     try {
       satbtn[0].insertAdjacentElement('beforeend', template);
-    } catch(e) {
+    } catch (e) {
       initMap();
     }
-
-
   }, 2000);
-
 };
 
 
-
-
-
-
-
-
+function closePreviousWindow() {
+  if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
+    winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]')[0].click()
+  }
+}
 
 
 
