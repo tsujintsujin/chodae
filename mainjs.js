@@ -32,7 +32,8 @@ function addSearch() {
   satbtn[0].insertAdjacentElement('beforeend', template);
   const opts = {
     fields: ["formatted_address", "geometry", "name"],
-    strictBounds: false
+    strictBounds: false,
+    types: ["establishment"]
   };
   input = document.getElementById("searchInput");
   autocomplete = new google.maps.places.Autocomplete(input, opts);
@@ -53,12 +54,11 @@ listItems.forEach(listItem => {
         clearInterval(intervalSearch);
         break;
       case 'Explore':
+      
         document.getElementById('exploreSection').scrollIntoView();
+        if (document.getElementById('searchInput') ? '' :addSearch());
         intervalSearch = setInterval(function () {
-          if (document.getElementById('searchInput')) {
-          } else {
-            addSearch();
-          }
+          if (document.getElementById('searchInput') ? '' :addSearch());
         }, 2000);
         break;
       case 'Budget':
@@ -303,17 +303,12 @@ function searchPan() {
 
   autocomplete.bindTo("bounds", map2);
 
-  infowindow = new google.maps.InfoWindow();
-  infowindowContent = document.getElementById("infoWindowDiv");
-  console.log(infowindowContent);
-
   const marker = new google.maps.Marker({
     map2,
     anchorPoint: new google.maps.Point(0, -29),
   });
 
-  autocomplete.addListener("place_changed", () => {
-    infowindow.close();
+    autocomplete.addListener("place_changed", () => {
     marker.setVisible(false);
 
     const place = autocomplete.getPlace();
@@ -371,14 +366,14 @@ function mapShowLocationDetails(geocoder, latlng) {
 }
 
 window.onload = function () {
-  //  window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
 
   setTimeout(() => {
 
 
     try {
       satbtn[0].insertAdjacentElement('beforeend', template);
-    } catch {
+    } catch(e) {
       initMap();
     }
 
