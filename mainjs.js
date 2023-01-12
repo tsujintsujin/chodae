@@ -79,13 +79,15 @@ function setCurrentMarker(marker) {
 }
 removeMarker.addEventListener("click", function () {
   currentMarker.setMap(null);
-  //remove from object array
+  //remove marker from array
   delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
 });
 
-
+// marker btn test
 mapMarker.addEventListener("click", function () {
-  if (windowOpen === true) {
+
+
+  if (windowOpen === true && document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
     markThis(coordinates, map2);
   } else {
     alert("None selected, can't add marker here.");
@@ -102,8 +104,10 @@ function markThis(latlng, map2) {
   userMarkerContent[`${latlng.lat}, ${latlng.lng}`] = markerContent;
   markerContent = '';
   marker.addListener('click', function () {
-    //window content pls
+
     closePreviousWindow();
+
+  //  set up for marker
     let lat = marker.position.lat();
     let lng = marker.position.lng();
     latlng = { lat: lat, lng: lng };
@@ -128,10 +132,10 @@ function getPlaceData() {
   if (partTitle[0] ? Title = partTitle[0].textContent : '')
     if (markerContent == "") {
       markerContent += `<b>${Title}</b>`;
-      for (let i = 0; i < partAddress.length; i++) {
-        let tempCheck = partAddress[i].textContent;
-        if (tempCheck.includes('+') ? '' : markerContent += `<br>${tempCheck}`);
-      }
+      //   for (let i = 0; i < partAddress.length; i++) {
+      //     let tempCheck = partAddress[i].textContent;
+      //     if (tempCheck.includes('+') ? '' : markerContent += `<br>${tempCheck}`);
+      //   }
     }
 
 
@@ -184,11 +188,11 @@ function initMap() {
     });
 
 
-    // Listen for click on map
+    // for click on map
     google.maps.event.addListener(map2, 'click', function (event) {
-      //closing previous window
+      // close previous window
       closePreviousWindow();
-      // Add marker
+      //for location clicks on map 
       let lat = event.latLng.lat();
       let lng = event.latLng.lng();
       latlng = { lat: lat, lng: lng };
@@ -203,83 +207,11 @@ function initMap() {
     initMap();
   }
 
-  // map.addListener('click', function (e) {
-  //   new google.maps.Marker({
-  //     position: e.latLng,
-  //     map: map
-  //   });
-  // });
-
-  /*
-  // Add marker
-  let marker = new google.maps.Marker({
-    position:{lat:42.4668,lng:-70.9495},
-    map:map,
-  });
-
-  let infoWindow = new google.maps.InfoWindow({
-    content:'<h1>Lynn MA</h1>'
-  });
-
-  marker.addListener('click', function(){
-    infoWindow.open(map, marker);
-  });
-  */
-
-  // Array of markers
-  // let markers = [
-  //   {
-  //     coords: { lat: 42.4668, lng: -70.9495 },
-  //     //  iconImage: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-  //     content: '<h1>Lynn MA</h1>'
-  //   },
-  //   {
-  //     coords: { lat: 42.8584, lng: -70.9300 },
-  //     content: '<h1>Amesbury MA</h1>'
-  //   },
-  //   {
-  //     coords: { lat: 42.7762, lng: -71.0773 }
-  //   }
-  // ];
-
-  // Loop through markers
-  // for (let i = 0; i < markers.length; i++) {
-  //   // Add marker
-  //   addMarker(markers[i]);
-  // }
-
-  // Add Marker Function
-  // function addMarker(props) {
-  //   let marker = new google.maps.Marker({
-  //     position: props.coords,
-  //     map: map,
-  //     //icon:props.iconImage
-  //   });
-
-  //   // Check for customicon
-  //   if (props.iconImage) {
-  //     // Set icon image
-  //     marker.setIcon(props.iconImage);
-  //   }
-
-  //   // Check content
-  //   if (props.content) {
-  //     let infoWindow = new google.maps.InfoWindow({
-  //       content: props.content
-  //     });
-
-  //     marker.addListener('click', function () {
-  //       infoWindow.open(map, marker);
-  //     });
-  //   }
-  // }
-
 }
 
 
 
 function searchPan() {
-
 
   autocomplete.bindTo("bounds", map2);
 
@@ -289,18 +221,17 @@ function searchPan() {
   });
 
   autocomplete.addListener("place_changed", () => {
+
     marker.setVisible(false);
 
     const place = autocomplete.getPlace();
 
     if (!place.geometry || !place.geometry.location) {
-      // User entered the name of a Place that was not suggested and
-      // pressed the Enter key, or the Place Details request failed.
       window.alert("No details available for input: '" + place.name + "'");
       return;
     }
 
-    // If the place has a geometry, then present it on a map.
+    // check 
     if (place.geometry.viewport) {
       map2.fitBounds(place.geometry.viewport);
     } else {
@@ -320,7 +251,7 @@ function mapShowLocationDetails(geocoder, latlng) {
     function (results, status) {
       if (status === 'OK') {
         if (results[0]) {
-          //scrape info window
+          //scrape info window, get place details will be taken from service, do this later
           let placeId = results[0].place_id;
           getPlaceData();
           getService(placeId);
@@ -334,44 +265,33 @@ function mapShowLocationDetails(geocoder, latlng) {
     })
 }
 
-
 function getService(placeId) {
   let request = {
     placeId: placeId
-
   };
   service = new google.maps.places.PlacesService(map2);
   service.getDetails(request, function (place, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       console.log(place);
-
-      //potos
+                                                                                    //photos url array here
       let i = 0;
-      while (i < place.photos.length) {
-        console.log(place.photos[i].getUrl());
-        placePhotos.push(place.photos[i].getUrl());
-        i++;
+      if (place.photos) {
+        while (i < place.photos.length) {
+          console.log(place.photos[i].getUrl());
+          placePhotos.push(place.photos[i].getUrl());
+          i++;
+        }
+      } else {
+        console.log("No photo references");
       }
-
-
-
-      console.log(placePhotos);
-
-
-
     } else {
       console.log("Place not found");
     }
   });
 }
 
-
-
-
-
-
 window.onload = function () {
-  window.scrollTo(0, 0);
+  //  window.scrollTo(0, 0);
   setTimeout(() => {
     try {
       satbtn[0].insertAdjacentElement('beforeend', template);
@@ -381,10 +301,10 @@ window.onload = function () {
   }, 2000);
 };
 
-
 function closePreviousWindow() {
   if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
     winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]')[0].click()
+    windowOpen = false;
   }
 }
 

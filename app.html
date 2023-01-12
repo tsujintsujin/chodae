@@ -83,32 +83,66 @@
 
                 </div>
             </section>
-
+            <!-- <h2 class="fw-bold position-absolute ">Image</h2> -->
             <section id="exploreSection" class="content-section vh-100 ">
                 <div class="container-fluid bg-success bg-opacity-50 vh-100 py-3">
-
                     <div class="row h-100 bg-warning ">
                         <div class="col bg-success me-3">
-                            <div class="row vh-50 bg-info p-2">
-                                <p>location pic</p>
+                            <div class="row vh-50 bg-info">   
+                                <!-- this one -->
+                                <div id="myCarousel" class="carousel slide p-0 m-0" data-bs-ride="carousel">
+                                    <button class="btn bg-white rounded-circle" type="button" data-bs-target="#myCarousel" data-bs-slide="prev" >
+                                        <span class="fs-4">←</span>
+                                      </button>
+                                      <button class="btn" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                                        <span class="fs-4">→</span>
+                                      </button>
+
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item">
+                                                <div class="img-fit rounded-2" style="background-image: url(https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sARywPAIhqbweo_1a33vOGP0c6QRKdI8X4-8e7pk371JtgA8eRmz0C6qw-lQ7973zLtvpgsB4xlIm-CNTDQNLltlzqBIpSahe8Z-5MwRCMXhLsy7okbljt0ItsMox5Tr_eSpNKy9d2r5eyvvPKBC_QGFDvufm4PNvGlYfgEboajFWcrMC0rEJ&3u4032&5m1&2e1&callback=none&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&token=114623);"> 
+                                       
+                                                </div>
+                                        </div>
+                                        <div class="carousel-item active">
+                                            <div class="img-fit rounded-2" style="background-image: url(https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sARywPALt1D09jmJKZ88gRLeMLMC6M2-qf2g0sf-Hlk47elMmuzut4hLp3LdAyazdYCXGp6vvF4N2ZcdAcV3XlB3RoytQognUlOGO6hKsWoUk8VWnumuhdeZJLyK_0Cn6nvZKjYZYEs2Cf5d387VZIlBC0WRtLR6FoasmXySWYTm0OOl6LSae&3u3024&5m1&2e1&callback=none&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&token=113528);">
+                                                <!-- <div class="img-fit" style="background-image: url(https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sARywPAIhqbweo_1a33vOGP0c6QRKdI8X4-8e7pk371JtgA8eRmz0C6qw-lQ7973zLtvpgsB4xlIm-CNTDQNLltlzqBIpSahe8Z-5MwRCMXhLsy7okbljt0ItsMox5Tr_eSpNKy9d2r5eyvvPKBC_QGFDvufm4PNvGlYfgEboajFWcrMC0rEJ&3u4032&5m1&2e1&callback=none&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&token=114623);"> 
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                                
                             </div>
                             <div class="row vh-25 bg-dark text-white p-2">
-                                <p>location details</p>
-                                
+                                <div id="addressContainer">
+                                    <h3 class="fw-bold">Villa Amparo Garden Beach Resort</h3>
+                                    <h5>Sitio Dasag, Bgy.</h5>
+                                    <h5>Island Garden City of Samal</h5>
+                                    <h5>Davao del Norte, Philippines</h5>
+                                    <hr>
+                                </div>
+                                <div class="ratingContainer d-flex ">
+                                    <h5 class="mt-1 me-2">4.5</h5>
+                                    <img src="icons\starFull.png" alt="">
+                                    <img src="icons\starFull.png" alt="">
+                                    <img src="icons\starFull.png" alt="">
+                                    <img src="icons\starHalf.png" alt="">
+                                    <img src="icons\starEmpty.png" alt="">
+                                    <h5 class="ms-3">5 Reviews</h5>
+                                </div>
+                                <div class="reviewContainer d-flex">
+
+                                </div>
                             </div>
                         </div>
 
                         <div class="col bg-success">
-
                             <div class="h-100 w-100 rounded-3" id="map2">
-
-
                             </div>
-                            
                         </div>
                     </div>
-
-
                 </div>
             </section>
             <section id="budgetSection" class="content-section vh-100 ">
@@ -144,9 +178,9 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&libraries=places&callback=initMap&v=weekly"></script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
 
     <script src="mainjs.js"></script>
 
