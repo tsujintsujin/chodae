@@ -1,6 +1,8 @@
 * {
     padding: 0;
     margin: 0;
+    line-height: normal;
+
 }
 
 .app-body {
@@ -118,7 +120,7 @@ a {
     font-family: Roboto, Arial, sans-serif;
     font-size: 15px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-    min-width: 200px;
+    min-width: 300px;
     border: none !important;
 }
 
@@ -144,4 +146,13 @@ a {
     background-size: cover;
     height: 48.5vh;
     background-position: center;
+}
+
+
+
+.btn-carousel-container{
+position: absolute;
+z-index: 15;
+bottom:0;
+margin: 1vh;
 }

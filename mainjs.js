@@ -272,8 +272,6 @@ function getService(placeId) {
   service = new google.maps.places.PlacesService(map2);
   service.getDetails(request, function (place, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-      console.log(place);
-                                                                                    //photos url array here
       let i = 0;
       if (place.photos) {
         while (i < place.photos.length) {
