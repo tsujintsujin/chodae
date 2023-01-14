@@ -29,16 +29,13 @@
                             <li id="Explore" class="ps-2 nav-item my-2 py-2 w-100 rounded-1">
                                 <h5><i class="fa-center me-2 fa fa-compass"></i>Explore</h5>
                             </li>
-                            <!-- <li id="Budget" class="ps-2 nav-item my-2 py-2 w-100 rounded-1">
-                                <h5><i class="fa-center me-2 fa fa-money"></i>Budget</h5>
-                            </li> -->
                             <hr class="my-5">
                             <li id="Contact" class="ps-2 nav-item my-2 py-2 w-100 rounded-1">
                                 <h5><i class="fa-center me-2 fa fa-phone"></i>Contact Us</h5>
                             </li>
                             <button class="btn" id="pan-to">Pan to location</button>
-                            <button class="btn">add marker here</button>
-                            <button class="btn" id="remove-marker">remove this marker</button>
+                            <button class="btn" id="testbtn">add marker here</button>
+                            <button class="btn" id="deleteMarker">remove this marker</button>
 
                         </ul>
                     </nav>
@@ -90,9 +87,10 @@
                         <div class="col me-3">
                             <div class="row vh-50">
                                 <!-- this one -->
-                                <div id="myCarousel" class="carousel carousel-fade p-0 m-0 rounded-5"
+                                <div id="myCarousel" class="carousel slide p-0 m-0 rounded-5"
                                     data-bs-ride="carousel">
                                     <div class="btn-carousel-container">
+                                        <div class="mt-auto">
                                         <button class="btn bg-white bg-opacity-50 rounded-circle m-1" type="button"
                                             data-bs-target="#myCarousel" data-bs-slide="prev">
                                             <span class="fs-4">🡠</span>
@@ -102,28 +100,15 @@
                                             <span class="fs-4">🡢</span>
                                         </button>
                                     </div>
-                                    <div class="carousel-inner">
-                                        <div class="carousel-item rounded-5">
-                                            <div class="img-fit rounded-5"
-                                                style="background-image: url(https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sARywPAIhqbweo_1a33vOGP0c6QRKdI8X4-8e7pk371JtgA8eRmz0C6qw-lQ7973zLtvpgsB4xlIm-CNTDQNLltlzqBIpSahe8Z-5MwRCMXhLsy7okbljt0ItsMox5Tr_eSpNKy9d2r5eyvvPKBC_QGFDvufm4PNvGlYfgEboajFWcrMC0rEJ&3u4032&5m1&2e1&callback=none&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&token=114623);">
-
-                                            </div>
-                                        </div>
-                                        <div class="carousel-item active rounded-5">
-                                            <div class="img-fit rounded-5"
-                                                style="background-image: url(https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sARywPALt1D09jmJKZ88gRLeMLMC6M2-qf2g0sf-Hlk47elMmuzut4hLp3LdAyazdYCXGp6vvF4N2ZcdAcV3XlB3RoytQognUlOGO6hKsWoUk8VWnumuhdeZJLyK_0Cn6nvZKjYZYEs2Cf5d387VZIlBC0WRtLR6FoasmXySWYTm0OOl6LSae&3u3024&5m1&2e1&callback=none&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&token=113528);">
-                                                <!-- <div class="img-fit" style="background-image: url(https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sARywPAIhqbweo_1a33vOGP0c6QRKdI8X4-8e7pk371JtgA8eRmz0C6qw-lQ7973zLtvpgsB4xlIm-CNTDQNLltlzqBIpSahe8Z-5MwRCMXhLsy7okbljt0ItsMox5Tr_eSpNKy9d2r5eyvvPKBC_QGFDvufm4PNvGlYfgEboajFWcrMC0rEJ&3u4032&5m1&2e1&callback=none&key=AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4&token=114623);"> 
-                                                </div> -->
-                                            </div>
-                                        </div>
                                     </div>
-
+                                    <div id="items-carousel" class="carousel-inner">
+                                       
+                                    </div>
                                 </div>
-
                             </div>
                             <div class="row vh-25 text-white p-2">
                                 <div id="addressContainer" class="text-black">
-                                    <h3 class="fw-bold">Villa Amparo Garden Beach Resort</h3>
+                                    <h3 id="locationTitle" class="fw-bold">Villa Amparo Garden Beach Resort</h3>
                                     <h5>Sitio Dasag, Bgy.</h5>
                                     <h5>Island Garden City of Samal</h5>
                                     <h5>Davao del Norte, Philippines</h5>
@@ -137,9 +122,12 @@
                                     <img src="icons\starHalf.png" alt="">
                                     <img src="icons\starEmpty.png" alt="">
                                     <h5 class="ms-3 mt-1">5 Reviews</h5>
+                                    
                                 </div>
+                                
                                 <div class="buttonsContainer mt-2 h-50 text-dark">
-                                    <div class="row h-100 text-center pt-5">
+                                    <div class="row h-100 text-center pt-5 mt-3">
+                                    
                                         <div class="col-6 position-relative d-flex flex-column ">
                                             <h6>You can mark the location displayed above</h6>
                                             <h6>by clicking on the button below.</h6>
@@ -169,7 +157,7 @@
                     </div>
                 </div>
             </section>
-            <!-- <section id="budgetSection" class="content-section vh-100 ">
+            <section id="budgetSection" class="content-section vh-100 ">
                 <div class="container-fluid bg-success bg-opacity-50 vh-100 py-3">
 
                     <div class="row h-65 bg-warning ">
@@ -193,7 +181,7 @@
                             </div>
                         </div>
                     </div>
-            </section> -->
+            </section>
         </div>
     </div>
     </div>

@@ -115,7 +115,6 @@ a {
     overflow: hidden;
     text-align: center;
     height: 40px;
-    width: 40px;
     color: rgb(86, 86, 86);
     font-family: Roboto, Arial, sans-serif;
     font-size: 15px;
@@ -147,7 +146,6 @@ a {
     height: 48.5vh;
     background-position: center;
 }
-
 
 
 .btn-carousel-container{

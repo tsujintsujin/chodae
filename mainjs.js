@@ -1,13 +1,12 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
-let map, map2, map3;
-let lati, longi, loc_title, loc_address, coordinates, geocoder;
+let map, map2;
+let lati, longi, loc_title, loc_addressHold = "", loc_address, coordinates, geocoder, titleDisplay;
 let satbtn, input, autocomplete, intervalSearch;
 let windowOpen = false;
 let partTitle, partAddress;
 let panTo = document.getElementById("pan-to");
 let mapMarker = document.getElementById("mapMarker");
-let removeMarker = document.getElementById("remove-marker");
 let Explore = document.getElementById('Explore');
 let expSect = document.getElementById('exploreSection');
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
@@ -22,16 +21,18 @@ let currentMarker;
 let service;
 let res;
 const placePhotos = [];
+const Users = {};
+let carouselItemContainer = document.getElementById('items-carousel');
+let addressContainer = document.getElementById('addressContainer');
+let locationTitle = document.getElementById('locationTitle');
+let tester = document.getElementById('testbtn');
+let global_latlng;
 
 
 function addSearch() {
-  template = document.createElement('btn');
-  template.innerHTML =
-    `
-    <div class="gm-style-mtc mapAdds">
-      <input id="searchInput" type="search" class="searchBar" placeholder="Search"/>
-    </div>
-  `
+  template = document.createElement('div');
+  template.classList.add("gm-style-mtc", "d-flex", "d-flex");
+  template.innerHTML = `<input id="searchInput" type="search" class="searchBar" placeholder="Search"/>`;
   satbtn = document.querySelectorAll('[role="menubar"]');
   satbtn[0].insertAdjacentElement('beforeend', template);
   const opts = {
@@ -64,36 +65,63 @@ listItems.forEach(listItem => {
           if (document.getElementById('searchInput') ? '' : addSearch());
         }, 2000);
         break;
-      case 'Budget':
-        document.getElementById('budgetSection').scrollIntoView();
-        clearInterval(intervalSearch);
-        break;
       default:
-        console.log('Search Empty');
+        intervalSearch = 2000;
     }
   });
 });
 
-function setCurrentMarker(marker) {
-  currentMarker = marker;
-}
-removeMarker.addEventListener("click", function () {
+
+deleteMarker.addEventListener("click", function () {
   currentMarker.setMap(null);
   //remove marker from array
   delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
+  delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
+  // console.log(currentMarker.position.lat());
 });
+
+
+
+// numbers.forEach(myFunction);
+
+// function myFunction(item) {
+//   if(44===item){
+//   return 0;
+//   }
+// }
 
 // marker btn test
 mapMarker.addEventListener("click", function () {
-
-
-  if (windowOpen === true && document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
-    markThis(coordinates, map2);
-  } else {
-    alert("None selected, can't add marker here.");
+  function checkDupe(loc) {
+    let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
+    if ((latlngKey in userMarkerContent)) {
+      locExisting = true;
+    }
   }
-});
 
+
+  let locExisting = false;
+  userMarkers.forEach(checkDupe);
+
+  if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
+
+    if (locExisting === false) {
+
+      markThis(global_latlng, map2);
+      console.log('marked');
+      // console.log(userMarkers)
+    } else {
+      console.log("Location already marked.");
+    }
+
+  } else {
+    console.log("None selected, can't add marker here.");
+
+  }
+  locExisting = false;
+
+
+});
 
 function markThis(latlng, map2) {
   let marker = new google.maps.Marker({
@@ -101,65 +129,169 @@ function markThis(latlng, map2) {
     map: map2
   });
 
-  userMarkerContent[`${latlng.lat}, ${latlng.lng}`] = markerContent;
+  userMarkerContent[`${latlng.lat}, ${latlng.lng}`] = loc_title + loc_address;
+
+  // console.log(loc_title);
+  // console.log(loc_address);
+  // console.log(userMarkerContent);
   markerContent = '';
+
+
+
+
   marker.addListener('click', function () {
+
+
 
     closePreviousWindow();
 
-  //  set up for marker
+    //  set up for marker
     let lat = marker.position.lat();
     let lng = marker.position.lng();
     latlng = { lat: lat, lng: lng };
     map2.panTo(latlng);
-    let winContent = userMarkerContent[`${latlng.lat}, ${latlng.lng}`]
+    global_latlng = latlng;
+    let titleHolder = userMarkerContent[`${global_latlng.lat}, ${global_latlng.lng}`];
+    titleDisplay = titleHolder.split("|");
+
+    console.log(titleDisplay[0]);
+    let winContent = titleDisplay[0];
+
+    // loop placeAddressArray
+
+
+
+    locationTitle.innerHTML = winContent;
+
     let infoWindow = new google.maps.InfoWindow({
       content: winContent
     });
     infoWindow.open(map2, marker);
-    setCurrentMarker(marker);
+    currentMarker = marker;
+
+
+    changeWithMarkerContent();
+
+
+
+
   });
-  userMarkers.push(latlng);
-  let unique = [...new Set(userMarkers)];
+
+
+  userMarkers.push(global_latlng);
+  const key = 'lat';
+  const unique = [...new Map(userMarkers.map(item =>
+    [item[key], item])).values()];
   userMarkers = unique;
 }
 
-function getPlaceData() {
+
+
+function getPlaceData(geocodeData) {
+
+
+  let titleNode = document.createElement('h3');
+  titleNode.classList.add("fw-bold");
   partAddress = document.querySelectorAll('[jstcache="4"]');
   partTitle = document.getElementsByClassName("title");
   googleLabel = document.querySelectorAll('[jstcache="6"]');
   let Title = '';
-  if (partTitle[0] ? Title = partTitle[0].textContent : '')
-    if (markerContent == "") {
-      markerContent += `<b>${Title}</b>`;
-      //   for (let i = 0; i < partAddress.length; i++) {
-      //     let tempCheck = partAddress[i].textContent;
-      //     if (tempCheck.includes('+') ? '' : markerContent += `<br>${tempCheck}`);
-      //   }
+
+  // title
+  // address  
+
+  //full address no id
+  let placeAddressArray = geocodeData.formatted_address.split(", ");
+  if (placeAddressArray[0].includes('+')) {
+    placeAddressArray.splice(0, 1);
+  }
+
+
+  // remove all children of addressContainer
+
+  if (partTitle[0] != undefined) {
+    while (addressContainer.children.length > 1 && addressContainer.lastChild) {
+      addressContainer.removeChild(addressContainer.lastChild);
     }
 
+    Title = partTitle[0].textContent;
+    locationTitle.innerHTML = Title;
+    markerContent = `<b>${Title}</b>`;
+
+    if (markerContent != "") {
+
+      for (let i = 0; i < partAddress.length; i++) {
+        let tempCheck = partAddress[i].textContent;
+
+        if (!tempCheck.includes('+') && tempCheck != undefined) {
+
+          let textNode = document.createElement('h5');
+          textNode.setAttribute("id", "address" + i);
+          textNode.innerHTML = tempCheck;
+          document.getElementById("addressContainer").appendChild(textNode);
+
+          loc_addressHold += "|" + tempCheck;
+        }
+      }
+      let hr = document.createElement('hr');
+      document.getElementById("addressContainer").appendChild(hr);
+    }
+    loc_address = loc_addressHold;
+    loc_addressHold = "";
+  }
 
   if (googleLabel[0] ? googleLabel[0].remove() : '');
 
+  // para san nga ba to???
+  // my gad
+
   try {
+
     loc_title = partTitle[0].textContent;
-    loc_address = `${partAddress[1].textContent} ${partAddress[2].textContent} ${partAddress[3].textContent}`;
+
+    // console.log(geocodeData);
+
+    // console.log(loc_title);
+    // console.log(loc_addressHold);
+
   } catch (e) {
     loc_title = "None selected";
-    loc_address = "None selected";
+    loc_addressHold = "None selected";
     if (e instanceof TypeError) {
       windowOpen = false;
     }
   }
 
   if (loc_title != "None selected" ? windowOpen = true : '');
+  markerContent = ""; 
+
+}
+
+function changeWithMarkerContent() {
+
+  while (addressContainer.children.length > 1 && addressContainer.lastChild) {
+    addressContainer.removeChild(addressContainer.lastChild);
+  }
+  for (let i = 0; i < titleDisplay.length; i++) {
+    let tempCheck = titleDisplay[i];
+
+
+    let textNode = document.createElement('h5');
+    textNode.setAttribute("id", "address" + i);
+    textNode.innerHTML = tempCheck;
+    document.getElementById("addressContainer").appendChild(textNode);
+
+  }
+  let hr = document.createElement('hr');
+  document.getElementById("addressContainer").appendChild(hr);
+
 }
 
 
 function initMap() {
   try {
 
-    // Map initial location
+    // Map initial location 
     let options = {
       zoom: 10,
       center: { lat: 7.356033977636596, lng: 125.85744918370949 },
@@ -178,7 +310,6 @@ function initMap() {
     // New maps
     map = new google.maps.Map(document.getElementById('map'), options);
     map2 = new google.maps.Map(document.getElementById('map2'), options2);
-    map3 = new google.maps.Map(document.getElementById('map3'), options);
 
 
     panTo.addEventListener("click", function () {
@@ -191,16 +322,17 @@ function initMap() {
     // for click on map
     google.maps.event.addListener(map2, 'click', function (event) {
       // close previous window
-      closePreviousWindow();
+
       //for location clicks on map 
       let lat = event.latLng.lat();
       let lng = event.latLng.lng();
       latlng = { lat: lat, lng: lng };
+      global_latlng = latlng;
       geocoder = new google.maps.Geocoder;
       mapShowLocationDetails(geocoder, latlng);
+      closePreviousWindow();
 
     });
-
 
 
   } catch {
@@ -208,7 +340,6 @@ function initMap() {
   }
 
 }
-
 
 
 function searchPan() {
@@ -250,12 +381,19 @@ function mapShowLocationDetails(geocoder, latlng) {
   geocoder.geocode({ 'location': latlng },
     function (results, status) {
       if (status === 'OK') {
-        if (results[0]) {
+        if (results[0].place_id) {
+
+
+          removeCarouselItems();
+
           //scrape info window, get place details will be taken from service, do this later
+          //some locations have no data in places api so I need to scrape it here
           let placeId = results[0].place_id;
-          getPlaceData();
-          getService(placeId);
-          coordinates = latlng;
+
+          getPlaceData(results[0]);
+
+          if (windowOpen ? getService(placeId) : '');
+
         } else {
           console.log('No results found');
         }
@@ -265,23 +403,71 @@ function mapShowLocationDetails(geocoder, latlng) {
     })
 }
 
+function removeCarouselItems() {
+  while (carouselItemContainer.hasChildNodes()) {
+    carouselItemContainer.removeChild(carouselItemContainer.firstChild);
+  }
+}
+
+
 function getService(placeId) {
   let request = {
     placeId: placeId
   };
   service = new google.maps.places.PlacesService(map2);
+
   service.getDetails(request, function (place, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       let i = 0;
       if (place.photos) {
+
         while (i < place.photos.length) {
-          console.log(place.photos[i].getUrl());
           placePhotos.push(place.photos[i].getUrl());
+          let isActive = '';
+          if (i === 1 ? isActive = 'active' : '');
+          let carouselItem = `<div class="carousel-item rounded-2 ${isActive}">
+                            <div class="img-fit rounded-2"
+                              style="background-image: url(${place.photos[i].getUrl()});">
+                            </div>
+                          </div>`
+          carouselItemContainer.innerHTML += carouselItem;
           i++;
         }
       } else {
         console.log("No photo references");
       }
+
+
+
+      // console.log(place);
+      // console.log("");
+      // console.log(place.adr_address); // dont use
+      // console.log("");
+      // console.log(place.name); // dont use
+      // console.log("");
+      // console.log(place.rating);
+      // console.log("");
+      // console.log(place.reviews); 
+      // console.log("");
+      // console.log(place.formatted_address); // dont use
+      // console.log("");
+      // console.log(place.current_opening_hours); 
+      // console.log("");
+      // console.log(place.formatted_phone_number);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     } else {
       console.log("Place not found");
     }
@@ -300,11 +486,16 @@ window.onload = function () {
 };
 
 function closePreviousWindow() {
+
   if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
     winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]')[0].click()
-    windowOpen = false;
   }
+  windowOpen = false;
 }
 
 
+let tetest = document.getElementById('testbtn');
+tetest.addEventListener("click", function () {
+  // console.log(windowOpen);
 
+});
