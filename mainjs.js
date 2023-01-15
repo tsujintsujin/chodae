@@ -1,12 +1,13 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
 let map, map2;
-let lati, longi, loc_title, loc_addressHold = "", loc_address, geocoder, titleDisplay;
+let lati, longi, loc_title, loc_addressHold = "", loc_address, geocoder, titleDisplay, placeId, Title;
 let satbtn, input, autocomplete, intervalSearch;
 let windowOpen = false;
 let partTitle, partAddress;
 let panTo = document.getElementById("pan-to");
-let mapMarker = document.getElementById("mapMarker");
+const mapMarker = document.getElementById("mapMarker");
+const addToBucket = document.getElementById("addToBucket");
 let Explore = document.getElementById('Explore');
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
 let googleLabel;
@@ -18,21 +19,34 @@ let markerContent = '';
 let latlng;
 let currentMarker;
 let service;
-const placePhotos = [];
+let placePhotos = [];
 let carouselItemContainer = document.getElementById('items-carousel');
 let addressContainer = document.getElementById('addressContainer');
 let locationTitle = document.getElementById('locationTitle');
+const starSection = document.getElementById('starSection');
 let global_latlng;
 let placeRating;
 let placeReviews;
 let transitTitle, transitAddress;
+let userMarkers = {};
+let currentPlace;
+let rating = 0;
+let reviews = [];
+let bucketList = {};
+
+
+
+
+
 
 function addSearch() {
   template = document.createElement('div');
   template.classList.add("gm-style-mtc", "d-flex", "d-flex");
   template.innerHTML = `<input id="searchInput" type="search" class="searchBar" placeholder="Search"/>`;
   satbtn = document.querySelectorAll('[role="menubar"]');
-  satbtn[0].insertAdjacentElement('beforeend', template);
+  if(satbtn[0]){
+    satbtn[0].insertAdjacentElement('beforeend', template);
+  }
   const opts = {
     fields: ["formatted_address", "geometry", "name"],
     strictBounds: false,
@@ -70,174 +84,187 @@ listItems.forEach(listItem => {
 });
 
 
-deleteMarker.addEventListener("click", function () {
+function deleteMarker() {
   currentMarker.setMap(null);
   //remove marker from array
-  delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
-  delete userMarkerLocation[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
-  // console.log(currentMarker.position.lat());
-});
+  // delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
+  // delete userMarkerLocation[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
+  delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
+  console.log(userMarkers);
 
-
-
-// numbers.forEach(myFunction);
-
-// function myFunction(item) {
-//   if(44===item){
-//   return 0;
-//   }
-// }
+}
 
 // marker btn test
 mapMarker.addEventListener("click", function () {
-  function checkDupe(loc) {
-    let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
-    if ((latlngKey in userMarkerContent)) {
-      locExisting = true;
-    }
-  }
-
-
-  let locExisting = false;
-  userMarkerLocation.forEach(checkDupe);
-
-  if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
-
-    if (locExisting === false) {
-
-      markThis(global_latlng, map2);
-    } else {
-      console.log("Location already marked.");
-    }
-
+  if (mapMarker.innerHTML === "Remove") {
+    deleteMarker();
+    closePreviousWindow();
+    mapMarker.classList.remove("btn-danger");
+    mapMarker.disabled = true;
+    addToBucket.disabled = true;
+    addToBucket.classList.remove("btn-primary");
+    mapMarker.innerHTML = "Mark";
   } else {
-    console.log("None selected, can't add marker here.");
+    function checkDupe(loc) {
+      let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
+      if ((latlngKey in userMarkers)) {
+        locExisting = true;
+      }
+    }
 
+    let locExisting = false;
+    userMarkerLocation.forEach(checkDupe);
+    if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
+      if (locExisting === false) {
+        markThis(global_latlng, map2);
+        mapMarker.classList.remove("btn-primary");
+        mapMarker.classList.add("btn-danger");
+        mapMarker.disabled = false;
+        mapMarker.innerHTML = "Remove";
+      } else {
+        console.log("Location already marked.");
+      }
+    } else {
+      console.log("None selected, can't add marker here.");
+    }
+    locExisting = false;
   }
-  locExisting = false;
-
-
 });
+
 
 function markThis(latlng, map2) {
   let marker = new google.maps.Marker({
     position: latlng,
     map: map2
   });
-
+  currentMarker = marker;
   userMarkerContent[`${latlng.lat}, ${latlng.lng}`] = loc_title + loc_address;
-
   markerContent = '';
-
-  marker.addListener('click', function () {
-    closePreviousWindow();
-
-    //  set up for marker
-    let lat = marker.position.lat();
-    let lng = marker.position.lng();
-    latlng = { lat: lat, lng: lng };
-    map2.panTo(latlng);
-    global_latlng = latlng;
-    let titleHolder = userMarkerContent[`${global_latlng.lat}, ${global_latlng.lng}`];
-    titleDisplay = titleHolder.split("|");
-
-    let winContent = titleDisplay[0];
-
-    // loop placeAddressArray
-    locationTitle.innerHTML = winContent;
-
-    let infoWindow = new google.maps.InfoWindow({
-      content: winContent
-    });
-    infoWindow.open(map2, marker);
-    currentMarker = marker;
-
-    changeWithMarkerContent();
-
-    console.log(latlng);
-    console.log(loc_address);
-
-
-    console.log("");
-
-
-  });
-
   userMarkerLocation.push(global_latlng);
   const key = 'lat';
   const unique = [...new Map(userMarkerLocation.map(item =>
     [item[key], item])).values()];
   userMarkerLocation = unique;
+
+  let tempData = {};
+
+  tempData['COORDINATES'] = latlng;
+  tempData['ID'] = placeId;
+  tempData['TITLE'] = loc_title;
+  tempData['ADDRESS'] = loc_address; ``
+  tempData['PHOTOS'] = placePhotos;
+  tempData['RATING'] = rating;
+  tempData['REVIEWS'] = reviews;
+
+  userMarkers[`${latlng.lat}, ${latlng.lng}`] = tempData;
+  placePhotos = [];
+
+
+  marker.addListener('click', function () {
+    closePreviousWindow();
+    map2.panTo(latlng);
+    let lat = marker.position.lat();
+    let lng = marker.position.lng();
+    latlng = { lat: lat, lng: lng };
+    global_latlng = latlng;
+    let markerSelected = userMarkers[`${latlng.lat}, ${latlng.lng}`];
+    //  set up for marker
+    locationTitle.innerHTML = markerSelected.TITLE;
+    // loop placeAddressArray
+    let infoWindow = new google.maps.InfoWindow({
+      content: markerSelected.TITLE
+    });
+
+    infoWindow.open(map2, marker);
+    currentMarker = marker;
+
+    changeWithMarkerContent(markerSelected);
+    if (markerSelected.PHOTOS != 0) {
+
+      changePhotos(markerSelected.PHOTOS);
+    } else {
+      carouselItem = `<div class="carousel-item rounded-2 active">
+      <div class="img-fit rounded-2"
+        style="background-image: url(icons/nophotos.svg);">
+      </div>
+    </div>`
+      carouselItemContainer.innerHTML = carouselItem;
+    }
+    setStarSection(markerSelected.RATING, markerSelected.REVIEWS);
+
+    mapMarker.classList.remove("btn-primary");
+    mapMarker.classList.add("btn-danger");
+    mapMarker.disabled = false;
+    mapMarker.innerHTML = "Remove";
+
+    addToBucket.classList.add("btn-primary");
+    addToBucket.disabled = false;
+
+  });
 }
 
 
-
 function getPlaceData(geocodeData) {
-  let Title = '';
+  Title = '';
   let titleNode = document.createElement('h3');
   titleNode.classList.add("fw-bold");
   partAddress = document.querySelectorAll('[jstcache="4"]');
   partTitle = document.getElementsByClassName("title");
   googleLabel = document.querySelectorAll('[jstcache="6"]');
 
-  console.log(geocodeData.formatted_address);
   //full address no id
   let placeAddressArray = geocodeData.formatted_address.split(", ");
-  
+
   //remove reference id if existing
   if (placeAddressArray[0].includes('+')) {
     placeAddressArray.splice(0, 1);
   }
 
   transitTitle = document.getElementsByClassName("transit-title")
-// check for transit window
-  if(transitTitle[1]){
+  // check for transit window
+  if (transitTitle[1]) {
     Title = transitTitle[1].textContent;
-  }else{
+  } else if (partTitle[0]) {
     Title = partTitle[0].textContent;
+  } else {
+    // do nothing
   }
 
-
   // remove all children of addressContainer for later setting of text
-  if (Title != undefined) {
+  if (Title.length != 0) {
     while (addressContainer.children.length > 1 && addressContainer.lastChild) {
       addressContainer.removeChild(addressContainer.lastChild);
     }
 
     locationTitle.innerHTML = Title;
     markerContent = `<b>${Title}</b>`;
-  
-    if (markerContent != "") {
+
+    if (markerContent != '') {
       for (let i = 0; i < partAddress.length; i++) {
         let tempCheck = partAddress[i].textContent;
         if (!tempCheck.includes('+') && tempCheck != undefined) {
-
           let textNode = document.createElement('h5');
           textNode.setAttribute("id", "address" + i);
           textNode.innerHTML = tempCheck;
           document.getElementById("addressContainer").appendChild(textNode);
-
           loc_addressHold += "|" + tempCheck;
         }
       }
 
       let hr = document.createElement('hr');
       document.getElementById("addressContainer").appendChild(hr);
-    }
-    loc_address = loc_addressHold;
-    loc_addressHold = "";
-  }
 
+    }
+    loc_address = loc_addressHold.slice(1);
+    loc_addressHold = "";
+
+  }
+  Title = "";
   if (googleLabel[0] ? googleLabel[0].remove() : '');
 
-  // para san nga ba to???
-  // my gad
 
   try {
-
     loc_title = partTitle[0].textContent;
-
-
   } catch (e) {
     loc_title = "None selected";
     loc_addressHold = "None selected";
@@ -248,39 +275,75 @@ function getPlaceData(geocodeData) {
 
   if (loc_title != "None selected" ? windowOpen = true : '');
   markerContent = "";
-
-
-
-  //if location is transit/bus stop
-
-
-
 }
 
-function changeWithMarkerContent() {
+
+function setStarSection(stars, rev) {
+
+  let starLinePref = `<h5 id="starNumber" class="mt-1 me-2">${stars}</h5>`;
+  let starLineContent = "";
+  let fullStar = '<img src="icons\\starFull.png" alt="">';
+  let halfStar = '<img src="icons\\starHalf.png" alt="">';
+  let emptyStar = '<img src="icons\\starEmpty.png" alt="">';
+
+  // amazing hahahah
+  if (stars === 0) {
+    starLinePref = `<h5 id="starNumber" class="mt-1 me-2">No Ratings</h5></h5>`;
+    starLineContent = emptyStar + emptyStar + emptyStar + emptyStar + emptyStar;
+
+  } else {
+    let iter = Math.floor(rating);
+    let cons = 1;
+    let full = iter;
+    let emptys;
+    let half;
+    if (stars % cons != 0) {
+      half = 1;
+      emptys = 4 - full;
+    } else {
+      half = 0;
+      emptys = 5 - iter;
+    }
+    for (let i = 1; i <= full; i++) {
+      starLineContent += fullStar;
+    }
+    if (half != 0) {
+      starLineContent += halfStar;
+    }
+    if (emptys != 0) {
+      for (let i = 1; i <= emptys; i++) {
+        starLineContent += emptyStar;
+      }
+    }
+  }
+
+  starLineContent += `<h5 id="ratingNumber" class="ms-3 mt-1">${rev.length} Reviews</h5>`;
+  starLinePref += starLineContent;
+  starSection.innerHTML = "";
+  starSection.innerHTML = starLinePref;
+}
+
+
+function changeWithMarkerContent(markerSelected) {
+  let addressArray = markerSelected.ADDRESS.split("|");
 
   while (addressContainer.children.length > 1 && addressContainer.lastChild) {
     addressContainer.removeChild(addressContainer.lastChild);
   }
-  for (let i = 1; i < titleDisplay.length; i++) {
-    let tempCheck = titleDisplay[i];
 
-
+  for (let i = 0; i < addressArray.length; i++) {
+    let tempCheck = addressArray[i];
     let textNode = document.createElement('h5');
     textNode.setAttribute("id", "address" + i);
     textNode.innerHTML = tempCheck;
     document.getElementById("addressContainer").appendChild(textNode);
-
   }
   let hr = document.createElement('hr');
   document.getElementById("addressContainer").appendChild(hr);
-
 }
 
-
-function initMap() {
-  try {
-
+try {
+  function initMap() {
     // Map initial location 
     let options = {
       zoom: 10,
@@ -296,11 +359,9 @@ function initMap() {
       fullscreenControl: false,
       disableDoubleClickZoom: true
     }
-
     // New maps
     map = new google.maps.Map(document.getElementById('map'), options);
     map2 = new google.maps.Map(document.getElementById('map2'), options2);
-
 
     panTo.addEventListener("click", function () {
       latlng = new google.maps.LatLng(7.177371073399362, 125.72633743286133);
@@ -308,10 +369,8 @@ function initMap() {
       map2.panTo(latlng);
     });
 
-
     // for click on map
     google.maps.event.addListener(map2, 'click', function (event) {
-      // close previous window
 
       //for location clicks on map 
       let lat = event.latLng.lat();
@@ -321,50 +380,36 @@ function initMap() {
       geocoder = new google.maps.Geocoder;
       mapShowLocationDetails(geocoder, latlng);
       closePreviousWindow();
-
     });
-
-
-  } catch {
-    initMap();
   }
-
+} catch (e) {
+  initMap();
 }
 
-
 function searchPan() {
-
   autocomplete.bindTo("bounds", map2);
-
   const marker = new google.maps.Marker({
     map2,
     anchorPoint: new google.maps.Point(0, -29),
   });
-
   autocomplete.addListener("place_changed", () => {
-
     marker.setVisible(false);
-
     const place = autocomplete.getPlace();
-
     if (!place.geometry || !place.geometry.location) {
       window.alert("No details available for input: '" + place.name + "'");
       return;
     }
 
-    // check 
     if (place.geometry.viewport) {
       map2.fitBounds(place.geometry.viewport);
     } else {
       map2.setCenter(place.geometry.location);
       map2.setZoom(12);
     }
-
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
   });
 }
-
 
 
 function mapShowLocationDetails(geocoder, latlng) {
@@ -372,33 +417,69 @@ function mapShowLocationDetails(geocoder, latlng) {
     function (results, status) {
       if (status === 'OK') {
         if (results[0].place_id) {
-          console.log("results fired");
-
-
-
           //scrape info window, get place details will be taken from service, do this later
-          //some locations have no data in places api so I need to scrape it here
-          let placeId = results[0].place_id;
-          console.log(results[0]);
+          //some locations have no data in places api, need to grab from window dom
+          placeId = results[0].place_id;
           getPlaceData(results[0]);
           if (windowOpen && results[0]) {
             getService(placeId);
+            mapMarker.classList.add("btn-primary");
+            mapMarker.classList.remove("btn-danger");
+            addToBucket.classList.add("btn-primary");
+            mapMarker.disabled = false;
+            addToBucket.disabled = false;
+            mapMarker.innerHTML = "Mark";
+          } else {
+            mapMarker.classList.remove("btn-danger");
+            mapMarker.classList.remove("btn-primary");
+            addToBucket.classList.remove("btn-primary");
+            mapMarker.innerHTML = "Mark";
+            mapMarker.disabled = true;
+            addToBucket.disabled = true;
           }
-
-
-
         } else {
           console.log('No results found');
+
         }
       } else {
+
         console.log('Geocoder failed due to: ' + status);
       }
     })
 }
 
+
 function removeCarouselItems() {
   while (carouselItemContainer.hasChildNodes()) {
     carouselItemContainer.removeChild(carouselItemContainer.firstChild);
+  }
+}
+
+
+function collectPhotoUrl(photos) {
+  placePhotos = [];
+  let i = 0;
+  while (i < photos.length) {
+    placePhotos.push(photos[i].getUrl());
+    i++;
+  }
+  changePhotos(placePhotos);
+}
+
+
+function changePhotos(photos) {
+  removeCarouselItems();
+  let i = 0;
+  while (i < photos.length) {
+    let isActive = '';
+    if (i === 1 ? isActive = 'active' : '');
+    carouselItem = `<div class="carousel-item rounded-2 ${isActive}">
+                      <div class="img-fit rounded-2"
+                        style="background-image: url(${photos[i]});">
+                      </div>
+                    </div>`
+    carouselItemContainer.innerHTML += carouselItem;
+    i++;
   }
 }
 
@@ -412,42 +493,29 @@ function getService(placeId) {
   service = new google.maps.places.PlacesService(map2);
   service.getDetails(request, function (place, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-      if(place.rating){
-      // console.log(place.rating);
-      }
-      if(place.reviews){
-        // console.log(place.reviews.length);
-      }
+      currentPlace = place;
 
-
-      let i = 0;
+      if (currentPlace.rating) {
+        rating = currentPlace.rating;
+      } else {
+        rating = 0;
+      }
+      if (currentPlace.reviews) {
+        reviews = currentPlace.reviews;
+      } else {
+        reviews = [];
+      }
+      setStarSection(rating, reviews);
       if (place.photos) {
-        while (i < place.photos.length) {
-          placePhotos.push(place.photos[i].getUrl());
-          let isActive = '';
-          if (i === 1 ? isActive = 'active' : '');
-          carouselItem = `<div class="carousel-item rounded-2 ${isActive}">
-                            <div class="img-fit rounded-2"
-                              style="background-image: url(${place.photos[i].getUrl()});">
-                            </div>
-                          </div>`
-          carouselItemContainer.innerHTML += carouselItem;
-          i++;
-        }
+        collectPhotoUrl(place.photos);
       } else {
         carouselItem = `<div class="carousel-item rounded-2 active">
         <div class="img-fit rounded-2"
           style="background-image: url(icons/nophotos.svg);">
         </div>
       </div>`
-
         carouselItemContainer.innerHTML = carouselItem;
-
-        console.log("No photo references");
       }
-
-
-
 
     } else {
       console.log("Place not found");
@@ -458,25 +526,19 @@ function getService(placeId) {
 window.onload = function () {
   //  window.scrollTo(0, 0);
   setTimeout(() => {
-    try {
+    if (satbtn[0]) {
       satbtn[0].insertAdjacentElement('beforeend', template);
-    } catch (e) {
+    } else {
       initMap();
     }
   }, 2000);
 };
 
-function closePreviousWindow() {
 
+function closePreviousWindow() {
   if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
     winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]')[0].click()
   }
   windowOpen = false;
 }
 
-
-let tetest = document.getElementById('testbtn');
-tetest.addEventListener("click", function () {
-  // console.log(windowOpen);
-
-});

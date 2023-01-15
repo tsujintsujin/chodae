@@ -34,8 +34,8 @@
                                 <h5><i class="fa-center me-2 fa fa-phone"></i>Contact Us</h5>
                             </li>
                             <button class="btn" id="pan-to">Pan to location</button>
-                            <button class="btn" id="testbtn">add marker here</button>
-                            <button class="btn" id="deleteMarker">remove this marker</button>
+                         
+                            <!-- <button class="btn" id="deleteMarker">remove this marker</button> -->
 
                         </ul>
                     </nav>
@@ -106,32 +106,22 @@
                                    
                                     <hr>
                                 </div>
-                                <div class="ratingContainer d-flex text-black align-items-center">
-                                    <h5 class="mt-1 me-2">4.5</h5>
-                                    <img src="icons\starFull.png" alt="">
-                                    <img src="icons\starFull.png" alt="">
-                                    <img src="icons\starFull.png" alt="">
-                                    <img src="icons\starHalf.png" alt="">
-                                    <img src="icons\starEmpty.png" alt="">
-                                    <h5 class="ms-3 mt-1">5 Reviews</h5>
+                                <div id="starSection" class="ratingContainer d-flex text-black align-items-center">
                                     
                                 </div>
-                                
                                 <div class="buttonsContainer mt-2 h-50 text-dark">
                                     <div class="row h-100 text-center pt-5 mt-3">
                                     
-                                        <div class="col-6 position-relative d-flex flex-column ">
-                                            <h6>You can mark the location displayed above</h6>
-                                            <h6>by clicking on the button below.</h6>
-                                            <button class="btn btn-primary mt-auto" id="mapMarker">Mark this
-                                                Location</button>
-
+                                        <div class="col-6 position-relative d-flex flex-column">
+                                            <h6>Highlight the location in the map</h6>
+                                            <h6>to be able to mark the location.</h6>
+                                            <button disabled class="btn mt-auto border border-2" id="mapMarker">Mark</button>
                                         </div>
                                         <div class="col-6 position-relative d-flex flex-column ">
                                             <h6>Add the location to your bucketlist!</h6>
                                             <h6>Good Luck on your Travels!</h6>
 
-                                            <button class="btn btn-primary mt-auto">Add to list</button>
+                                            <button disabled class="btn border border-2 mt-auto" id="addToBucket">Add to list</button>
 
                                         </div>
 
