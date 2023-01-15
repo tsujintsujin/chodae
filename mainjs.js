@@ -1,33 +1,31 @@
 const listItems = document.querySelectorAll('nav .nav-item');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
 let map, map2;
-let lati, longi, loc_title, loc_addressHold = "", loc_address, coordinates, geocoder, titleDisplay;
+let lati, longi, loc_title, loc_addressHold = "", loc_address, geocoder, titleDisplay;
 let satbtn, input, autocomplete, intervalSearch;
 let windowOpen = false;
 let partTitle, partAddress;
 let panTo = document.getElementById("pan-to");
 let mapMarker = document.getElementById("mapMarker");
 let Explore = document.getElementById('Explore');
-let expSect = document.getElementById('exploreSection');
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
 let googleLabel;
 let googleLabelStatus = true;
 let template = document.createElement('btn');
-let userMarkers = [];
+let userMarkerLocation = [];
 let userMarkerContent = {};
 let markerContent = '';
 let latlng;
 let currentMarker;
 let service;
-let res;
 const placePhotos = [];
-const Users = {};
 let carouselItemContainer = document.getElementById('items-carousel');
 let addressContainer = document.getElementById('addressContainer');
 let locationTitle = document.getElementById('locationTitle');
-let tester = document.getElementById('testbtn');
 let global_latlng;
-
+let placeRating;
+let placeReviews;
+let transitTitle, transitAddress;
 
 function addSearch() {
   template = document.createElement('div');
@@ -76,7 +74,7 @@ deleteMarker.addEventListener("click", function () {
   currentMarker.setMap(null);
   //remove marker from array
   delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
-  delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
+  delete userMarkerLocation[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
   // console.log(currentMarker.position.lat());
 });
 
@@ -101,15 +99,13 @@ mapMarker.addEventListener("click", function () {
 
 
   let locExisting = false;
-  userMarkers.forEach(checkDupe);
+  userMarkerLocation.forEach(checkDupe);
 
   if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
 
     if (locExisting === false) {
 
       markThis(global_latlng, map2);
-      console.log('marked');
-      // console.log(userMarkers)
     } else {
       console.log("Location already marked.");
     }
@@ -131,18 +127,9 @@ function markThis(latlng, map2) {
 
   userMarkerContent[`${latlng.lat}, ${latlng.lng}`] = loc_title + loc_address;
 
-  // console.log(loc_title);
-  // console.log(loc_address);
-  // console.log(userMarkerContent);
   markerContent = '';
 
-
-
-
   marker.addListener('click', function () {
-
-
-
     closePreviousWindow();
 
     //  set up for marker
@@ -154,13 +141,9 @@ function markThis(latlng, map2) {
     let titleHolder = userMarkerContent[`${global_latlng.lat}, ${global_latlng.lng}`];
     titleDisplay = titleHolder.split("|");
 
-    console.log(titleDisplay[0]);
     let winContent = titleDisplay[0];
 
     // loop placeAddressArray
-
-
-
     locationTitle.innerHTML = winContent;
 
     let infoWindow = new google.maps.InfoWindow({
@@ -169,60 +152,64 @@ function markThis(latlng, map2) {
     infoWindow.open(map2, marker);
     currentMarker = marker;
 
-
     changeWithMarkerContent();
 
+    console.log(latlng);
+    console.log(loc_address);
 
+
+    console.log("");
 
 
   });
 
-
-  userMarkers.push(global_latlng);
+  userMarkerLocation.push(global_latlng);
   const key = 'lat';
-  const unique = [...new Map(userMarkers.map(item =>
+  const unique = [...new Map(userMarkerLocation.map(item =>
     [item[key], item])).values()];
-  userMarkers = unique;
+  userMarkerLocation = unique;
 }
 
 
 
 function getPlaceData(geocodeData) {
-
-
+  let Title = '';
   let titleNode = document.createElement('h3');
   titleNode.classList.add("fw-bold");
   partAddress = document.querySelectorAll('[jstcache="4"]');
   partTitle = document.getElementsByClassName("title");
   googleLabel = document.querySelectorAll('[jstcache="6"]');
-  let Title = '';
 
-  // title
-  // address  
-
+  console.log(geocodeData.formatted_address);
   //full address no id
   let placeAddressArray = geocodeData.formatted_address.split(", ");
+  
+  //remove reference id if existing
   if (placeAddressArray[0].includes('+')) {
     placeAddressArray.splice(0, 1);
   }
 
+  transitTitle = document.getElementsByClassName("transit-title")
+// check for transit window
+  if(transitTitle[1]){
+    Title = transitTitle[1].textContent;
+  }else{
+    Title = partTitle[0].textContent;
+  }
 
-  // remove all children of addressContainer
 
-  if (partTitle[0] != undefined) {
+  // remove all children of addressContainer for later setting of text
+  if (Title != undefined) {
     while (addressContainer.children.length > 1 && addressContainer.lastChild) {
       addressContainer.removeChild(addressContainer.lastChild);
     }
 
-    Title = partTitle[0].textContent;
     locationTitle.innerHTML = Title;
     markerContent = `<b>${Title}</b>`;
-
+  
     if (markerContent != "") {
-
       for (let i = 0; i < partAddress.length; i++) {
         let tempCheck = partAddress[i].textContent;
-
         if (!tempCheck.includes('+') && tempCheck != undefined) {
 
           let textNode = document.createElement('h5');
@@ -233,6 +220,7 @@ function getPlaceData(geocodeData) {
           loc_addressHold += "|" + tempCheck;
         }
       }
+
       let hr = document.createElement('hr');
       document.getElementById("addressContainer").appendChild(hr);
     }
@@ -249,10 +237,6 @@ function getPlaceData(geocodeData) {
 
     loc_title = partTitle[0].textContent;
 
-    // console.log(geocodeData);
-
-    // console.log(loc_title);
-    // console.log(loc_addressHold);
 
   } catch (e) {
     loc_title = "None selected";
@@ -263,7 +247,13 @@ function getPlaceData(geocodeData) {
   }
 
   if (loc_title != "None selected" ? windowOpen = true : '');
-  markerContent = ""; 
+  markerContent = "";
+
+
+
+  //if location is transit/bus stop
+
+
 
 }
 
@@ -272,7 +262,7 @@ function changeWithMarkerContent() {
   while (addressContainer.children.length > 1 && addressContainer.lastChild) {
     addressContainer.removeChild(addressContainer.lastChild);
   }
-  for (let i = 0; i < titleDisplay.length; i++) {
+  for (let i = 1; i < titleDisplay.length; i++) {
     let tempCheck = titleDisplay[i];
 
 
@@ -382,17 +372,20 @@ function mapShowLocationDetails(geocoder, latlng) {
     function (results, status) {
       if (status === 'OK') {
         if (results[0].place_id) {
+          console.log("results fired");
 
 
-          removeCarouselItems();
 
           //scrape info window, get place details will be taken from service, do this later
           //some locations have no data in places api so I need to scrape it here
           let placeId = results[0].place_id;
-
+          console.log(results[0]);
           getPlaceData(results[0]);
+          if (windowOpen && results[0]) {
+            getService(placeId);
+          }
 
-          if (windowOpen ? getService(placeId) : '');
+
 
         } else {
           console.log('No results found');
@@ -411,21 +404,29 @@ function removeCarouselItems() {
 
 
 function getService(placeId) {
+  removeCarouselItems();
   let request = {
     placeId: placeId
   };
+  let carouselItem;
   service = new google.maps.places.PlacesService(map2);
-
   service.getDetails(request, function (place, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
+      if(place.rating){
+      // console.log(place.rating);
+      }
+      if(place.reviews){
+        // console.log(place.reviews.length);
+      }
+
+
       let i = 0;
       if (place.photos) {
-
         while (i < place.photos.length) {
           placePhotos.push(place.photos[i].getUrl());
           let isActive = '';
           if (i === 1 ? isActive = 'active' : '');
-          let carouselItem = `<div class="carousel-item rounded-2 ${isActive}">
+          carouselItem = `<div class="carousel-item rounded-2 ${isActive}">
                             <div class="img-fit rounded-2"
                               style="background-image: url(${place.photos[i].getUrl()});">
                             </div>
@@ -434,36 +435,16 @@ function getService(placeId) {
           i++;
         }
       } else {
+        carouselItem = `<div class="carousel-item rounded-2 active">
+        <div class="img-fit rounded-2"
+          style="background-image: url(icons/nophotos.svg);">
+        </div>
+      </div>`
+
+        carouselItemContainer.innerHTML = carouselItem;
+
         console.log("No photo references");
       }
-
-
-
-      // console.log(place);
-      // console.log("");
-      // console.log(place.adr_address); // dont use
-      // console.log("");
-      // console.log(place.name); // dont use
-      // console.log("");
-      // console.log(place.rating);
-      // console.log("");
-      // console.log(place.reviews); 
-      // console.log("");
-      // console.log(place.formatted_address); // dont use
-      // console.log("");
-      // console.log(place.current_opening_hours); 
-      // console.log("");
-      // console.log(place.formatted_phone_number);
-
-
-
-
-
-
-
-
-
-
 
 
 
