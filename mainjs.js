@@ -7,8 +7,9 @@ let windowOpen = false;
 let partTitle, partAddress;
 let panTo = document.getElementById("pan-to");
 const mapMarker = document.getElementById("mapMarker");
-const addToBucket = document.getElementById("addToBucket");
+const addtotravellist = document.getElementById("addtotravellist");
 let Explore = document.getElementById('Explore');
+let mainList = document.getElementById('mainList');
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
 let googleLabel;
 let googleLabelStatus = true;
@@ -24,6 +25,7 @@ let carouselItemContainer = document.getElementById('items-carousel');
 let addressContainer = document.getElementById('addressContainer');
 let locationTitle = document.getElementById('locationTitle');
 const starSection = document.getElementById('starSection');
+const MyList = document.getElementById('MyList');
 let global_latlng;
 let placeRating;
 let placeReviews;
@@ -33,7 +35,8 @@ let currentPlace;
 let rating = 0;
 let reviews = [];
 let bucketList = {};
-
+let addbucket = false;
+let locExisting = false;
 
 
 
@@ -44,7 +47,7 @@ function addSearch() {
   template.classList.add("gm-style-mtc", "d-flex", "d-flex");
   template.innerHTML = `<input id="searchInput" type="search" class="searchBar" placeholder="Search"/>`;
   satbtn = document.querySelectorAll('[role="menubar"]');
-  if(satbtn[0]){
+  if (satbtn[0]) {
     satbtn[0].insertAdjacentElement('beforeend', template);
   }
   const opts = {
@@ -87,12 +90,53 @@ listItems.forEach(listItem => {
 function deleteMarker() {
   currentMarker.setMap(null);
   //remove marker from array
-  // delete userMarkerContent[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
-  // delete userMarkerLocation[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`]
   delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
-  console.log(userMarkers);
-
+  try {
+    delete bucketList[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
+  } catch {
+    console.log("Marker does not exist on the list");
+  }
 }
+
+
+
+
+
+function checkDuplicate(userMarkers, map2, addbucket) {
+
+  let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
+  if (addbucket) {
+    for (let key in bucketList) {
+      if (latlngKey == key) {
+        locExisting = true;
+        console.log("existing in bucketlist");
+      }
+    }
+  } else {
+    tobucket = false;
+    for (let key in userMarkers) {
+      if (latlngKey == key) {
+        locExisting = true;
+        console.log("existing in marker");
+
+      }
+    }
+  }
+}
+
+
+addtotravellist.addEventListener("click", function () {
+  tobucket = true;
+  locExisting = false;
+  checkDuplicate(userMarkers, map2, true);
+  if (!locExisting) {
+    markThis(latlng, map2, true);
+    mapMarker.classList.remove("btn-primary");
+    mapMarker.classList.add("btn-danger");
+    mapMarker.disabled = false;
+    mapMarker.innerHTML = "Remove";
+  }
+});
 
 // marker btn test
 mapMarker.addEventListener("click", function () {
@@ -101,22 +145,17 @@ mapMarker.addEventListener("click", function () {
     closePreviousWindow();
     mapMarker.classList.remove("btn-danger");
     mapMarker.disabled = true;
-    addToBucket.disabled = true;
-    addToBucket.classList.remove("btn-primary");
+    addtotravellist.disabled = true;
+    addtotravellist.classList.remove("btn-primary");
     mapMarker.innerHTML = "Mark";
   } else {
-    function checkDupe(loc) {
-      let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
-      if ((latlngKey in userMarkers)) {
-        locExisting = true;
-      }
-    }
 
-    let locExisting = false;
-    userMarkerLocation.forEach(checkDupe);
+    locExisting = false;
+    checkDuplicate(userMarkers, map2, false);
     if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
       if (locExisting === false) {
-        markThis(global_latlng, map2);
+
+        markThis(global_latlng, map2, tobucket);
         mapMarker.classList.remove("btn-primary");
         mapMarker.classList.add("btn-danger");
         mapMarker.disabled = false;
@@ -132,11 +171,16 @@ mapMarker.addEventListener("click", function () {
 });
 
 
-function markThis(latlng, map2) {
+
+
+
+function markThis(latlng, map2, tobucket) {
+
   let marker = new google.maps.Marker({
     position: latlng,
     map: map2
   });
+
   currentMarker = marker;
   userMarkerContent[`${latlng.lat}, ${latlng.lng}`] = loc_title + loc_address;
   markerContent = '';
@@ -157,6 +201,11 @@ function markThis(latlng, map2) {
   tempData['REVIEWS'] = reviews;
 
   userMarkers[`${latlng.lat}, ${latlng.lng}`] = tempData;
+
+  if (tobucket) {
+    bucketList[`${latlng.lat}, ${latlng.lng}`] = tempData;
+  }
+
   placePhotos = [];
 
 
@@ -197,8 +246,8 @@ function markThis(latlng, map2) {
     mapMarker.disabled = false;
     mapMarker.innerHTML = "Remove";
 
-    addToBucket.classList.add("btn-primary");
-    addToBucket.disabled = false;
+    addtotravellist.classList.add("btn-primary");
+    addtotravellist.disabled = false;
 
   });
 }
@@ -425,17 +474,17 @@ function mapShowLocationDetails(geocoder, latlng) {
             getService(placeId);
             mapMarker.classList.add("btn-primary");
             mapMarker.classList.remove("btn-danger");
-            addToBucket.classList.add("btn-primary");
+            addtotravellist.classList.add("btn-primary");
             mapMarker.disabled = false;
-            addToBucket.disabled = false;
+            addtotravellist.disabled = false;
             mapMarker.innerHTML = "Mark";
           } else {
             mapMarker.classList.remove("btn-danger");
             mapMarker.classList.remove("btn-primary");
-            addToBucket.classList.remove("btn-primary");
+            addtotravellist.classList.remove("btn-primary");
             mapMarker.innerHTML = "Mark";
             mapMarker.disabled = true;
-            addToBucket.disabled = true;
+            addtotravellist.disabled = true;
           }
         } else {
           console.log('No results found');
@@ -526,11 +575,12 @@ function getService(placeId) {
 window.onload = function () {
   //  window.scrollTo(0, 0);
   setTimeout(() => {
-    if (satbtn[0]) {
+    try {
       satbtn[0].insertAdjacentElement('beforeend', template);
-    } else {
+    } catch {
       initMap();
     }
+
   }, 2000);
 };
 
@@ -541,4 +591,74 @@ function closePreviousWindow() {
   }
   windowOpen = false;
 }
+
+MyList.addEventListener('click', () => {
+  mainList.innerHTML = ""
+
+  console.log(bucketList);
+  let accordionConstruct = "";
+
+  let iter = 0;
+  for (let key in bucketList) {
+
+    let addressarr = bucketList[key].ADDRESS.split("|");
+
+
+    console.log(addressarr[0]);
+
+    let addressstr = "";
+    for(let i = 0 ; i<addressarr.length; i++){
+      addressstr+=`<h6>${addressarr[i]}</h6>`;
+    }
+  accordionConstruct = `<div class="accordion-item" id="accordionHead${iter}">
+	<h2 class="accordion-header" id="flush-heading${iter}">
+		<button class="accordion-button collapsed text-dark" type="button"
+			data-bs-toggle="collapse" data-bs-target="#${iter}"
+			aria-expanded="false" aria-controls="${iter}">
+			<h6>${bucketList[key].TITLE}</h6>
+		</button>
+	</h2>
+	<div id="${iter}" class="accordion-collapse collapse"
+		aria-labelledby="${iter}" data-bs-parent="#mainList">
+		<div id="accordionContent" class="accordion-body">${addressstr}
+		</div>
+	</div>
+</div>`
+
+iter++;
+mainList.innerHTML += accordionConstruct;
+
+// if(mainList.innerHTML!=""){
+
+//   mainList.forEach(mainList => {
+//     mainList.addEventListener('click', () => {
+//       mainList.forEach(mainList => {
+//         mainList.classList.remove('active');
+//       });
+//       mainList.classList.add('active');
+//       let activeID = mainList.getAttribute('id');
+//       switch (activeID) {
+//         case 'MyList':
+//           document.getElementById('myListSection').scrollIntoView();
+//           clearInterval(intervalSearch);
+//           break;
+//         case 'Explore':
+//           document.getElementById('exploreSection').scrollIntoView();
+//           if (document.getElementById('searchInput') ? '' : addSearch());
+//           intervalSearch = setInterval(function () {
+//             if (document.getElementById('searchInput') ? '' : addSearch());
+//           }, 2000);
+//           break;
+//         default:
+//           intervalSearch = 2000;
+//       }
+//     });
+//   });
+// }
+
+}
+
+
+});
+
 
