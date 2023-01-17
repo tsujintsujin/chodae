@@ -2,15 +2,16 @@ const listItems = document.querySelectorAll('nav .nav-item');
 const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
 let map, map2;
 let lati, longi, loc_title, loc_addressHold = "", loc_address, geocoder, titleDisplay, placeId, Title;
-let satbtn, input, autocomplete, intervalSearch;
+let satbtn, input, intervalSearch;
 let windowOpen = false;
 let partTitle, partAddress;
 let panTo = document.getElementById("pan-to");
 const mapMarker = document.getElementById("mapMarker");
 const addtotravellist = document.getElementById("addtotravellist");
 let Explore = document.getElementById('Explore');
-let mainList = document.getElementById('mainList');
 let close = document.querySelectorAll('[class="gm-ui-hover-effect"]');
+let expBtn = document.getElementById("expBtn");
+let autocomplete;
 let googleLabel;
 let googleLabelStatus = true;
 let template = document.createElement('btn');
@@ -40,6 +41,9 @@ let locExisting = false;
 
 
 
+expBtn.addEventListener('click', function () {
+  Explore.click();
+});
 
 
 function addSearch() {
@@ -70,11 +74,19 @@ listItems.forEach(listItem => {
     let activeID = listItem.getAttribute('id');
     switch (activeID) {
       case 'MyList':
-        document.getElementById('myListSection').scrollIntoView();
+        document.getElementById('exploreSection').style.display = "none";
+        document.getElementById('myListSection').style.display = "block";
+         closePreviousWindow();
         clearInterval(intervalSearch);
+
+
+
         break;
       case 'Explore':
-        document.getElementById('exploreSection').scrollIntoView();
+        document.getElementById('exploreSection').style.display = "block";
+        document.getElementById('myListSection').style.display = "none";
+        mapMarker.disabled = true;
+        addtotravellist.disabled = true;
         if (document.getElementById('searchInput') ? '' : addSearch());
         intervalSearch = setInterval(function () {
           if (document.getElementById('searchInput') ? '' : addSearch());
@@ -90,8 +102,8 @@ listItems.forEach(listItem => {
 function deleteMarker() {
   currentMarker.setMap(null);
   //remove marker from array
-  delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
   try {
+    delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
     delete bucketList[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
   } catch {
     console.log("Marker does not exist on the list");
@@ -103,7 +115,7 @@ function deleteMarker() {
 
 
 function checkDuplicate(userMarkers, map2, addbucket) {
-
+try{
   let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
   if (addbucket) {
     for (let key in bucketList) {
@@ -122,6 +134,10 @@ function checkDuplicate(userMarkers, map2, addbucket) {
       }
     }
   }
+}catch{
+  let latlngKey = "";
+}
+
 }
 
 
@@ -131,10 +147,13 @@ addtotravellist.addEventListener("click", function () {
   checkDuplicate(userMarkers, map2, true);
   if (!locExisting) {
     markThis(latlng, map2, true);
-    mapMarker.classList.remove("btn-primary");
-    mapMarker.classList.add("btn-danger");
+    // mapMarker.classList.remove("btn-primary");
+    // mapMarker.classList.add("btn-danger");
+    addtotravellist.disabled = true;
+    // addtotravellist.classList.remove("btn-primary");
     mapMarker.disabled = false;
     mapMarker.innerHTML = "Remove";
+
   }
 });
 
@@ -143,10 +162,10 @@ mapMarker.addEventListener("click", function () {
   if (mapMarker.innerHTML === "Remove") {
     deleteMarker();
     closePreviousWindow();
-    mapMarker.classList.remove("btn-danger");
+    // mapMarker.classList.remove("btn-danger");
     mapMarker.disabled = true;
     addtotravellist.disabled = true;
-    addtotravellist.classList.remove("btn-primary");
+    // addtotravellist.classList.remove("btn-primary");
     mapMarker.innerHTML = "Mark";
   } else {
 
@@ -154,10 +173,9 @@ mapMarker.addEventListener("click", function () {
     checkDuplicate(userMarkers, map2, false);
     if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
       if (locExisting === false) {
-
         markThis(global_latlng, map2, tobucket);
-        mapMarker.classList.remove("btn-primary");
-        mapMarker.classList.add("btn-danger");
+        // mapMarker.classList.remove("btn-primary");
+        // mapMarker.classList.add("btn-danger");
         mapMarker.disabled = false;
         mapMarker.innerHTML = "Remove";
       } else {
@@ -177,8 +195,10 @@ mapMarker.addEventListener("click", function () {
 function markThis(latlng, map2, tobucket) {
 
   let marker = new google.maps.Marker({
+    zoom: 8,
     position: latlng,
     map: map2
+
   });
 
   currentMarker = marker;
@@ -241,13 +261,22 @@ function markThis(latlng, map2, tobucket) {
     }
     setStarSection(markerSelected.RATING, markerSelected.REVIEWS);
 
-    mapMarker.classList.remove("btn-primary");
-    mapMarker.classList.add("btn-danger");
+    // mapMarker.classList.remove("btn-primary");
+    // mapMarker.classList.add("btn-danger");
     mapMarker.disabled = false;
     mapMarker.innerHTML = "Remove";
 
-    addtotravellist.classList.add("btn-primary");
+
+    checkDuplicate(userMarkers, map2, true);
+    if(locExisting){
+      console.log(locExisting);
+      addtotravellist.disabled = true;
+      // addtotravellist.classList.remove("btn-primary");
+    }else{
+    // addtotravellist.classList.add("btn-primary");
     addtotravellist.disabled = false;
+    }
+   
 
   });
 }
@@ -300,8 +329,6 @@ function getPlaceData(geocodeData) {
         }
       }
 
-      let hr = document.createElement('hr');
-      document.getElementById("addressContainer").appendChild(hr);
 
     }
     loc_address = loc_addressHold.slice(1);
@@ -391,19 +418,18 @@ function changeWithMarkerContent(markerSelected) {
   document.getElementById("addressContainer").appendChild(hr);
 }
 
-try {
   function initMap() {
     // Map initial location 
     let options = {
-      zoom: 10,
+      zoom: 8,
       center: { lat: 7.356033977636596, lng: 125.85744918370949 },
       draggable: false,
       disableDefaultUI: true,
       disableDoubleClickZoom: true,
     }
     let options2 = {
-      zoom: 8,
-      center: { lat: 7.356033977636596, lng: 125.85744918370949 },
+      zoom: 12,
+      center: { lat: 7.5821144803226606, lng: 125.21624565124512 },
       scrollwheel: true,
       fullscreenControl: false,
       disableDoubleClickZoom: true
@@ -411,12 +437,6 @@ try {
     // New maps
     map = new google.maps.Map(document.getElementById('map'), options);
     map2 = new google.maps.Map(document.getElementById('map2'), options2);
-
-    panTo.addEventListener("click", function () {
-      latlng = new google.maps.LatLng(7.177371073399362, 125.72633743286133);
-      map2.setZoom(12);
-      map2.panTo(latlng);
-    });
 
     // for click on map
     google.maps.event.addListener(map2, 'click', function (event) {
@@ -431,9 +451,6 @@ try {
       closePreviousWindow();
     });
   }
-} catch (e) {
-  initMap();
-}
 
 function searchPan() {
   autocomplete.bindTo("bounds", map2);
@@ -472,16 +489,16 @@ function mapShowLocationDetails(geocoder, latlng) {
           getPlaceData(results[0]);
           if (windowOpen && results[0]) {
             getService(placeId);
-            mapMarker.classList.add("btn-primary");
-            mapMarker.classList.remove("btn-danger");
-            addtotravellist.classList.add("btn-primary");
+            // mapMarker.classList.add("btn-primary");
+            // mapMarker.classList.remove("btn-danger");
+            // addtotravellist.classList.add("btn-primary");
             mapMarker.disabled = false;
             addtotravellist.disabled = false;
             mapMarker.innerHTML = "Mark";
           } else {
-            mapMarker.classList.remove("btn-danger");
-            mapMarker.classList.remove("btn-primary");
-            addtotravellist.classList.remove("btn-primary");
+            // mapMarker.classList.remove("btn-danger");
+            // mapMarker.classList.remove("btn-primary");
+            // addtotravellist.classList.remove("btn-primary");
             mapMarker.innerHTML = "Mark";
             mapMarker.disabled = true;
             addtotravellist.disabled = true;
@@ -572,17 +589,10 @@ function getService(placeId) {
   });
 }
 
-window.onload = function () {
-  //  window.scrollTo(0, 0);
-  setTimeout(() => {
-    try {
-      satbtn[0].insertAdjacentElement('beforeend', template);
-    } catch {
-      initMap();
-    }
 
-  }, 2000);
-};
+
+
+
 
 
 function closePreviousWindow() {
@@ -593,9 +603,12 @@ function closePreviousWindow() {
 }
 
 MyList.addEventListener('click', () => {
+
+  let mainList = document.getElementById('mainList');
+
   mainList.innerHTML = ""
 
-  console.log(bucketList);
+ 
   let accordionConstruct = "";
 
   let iter = 0;
@@ -604,14 +617,13 @@ MyList.addEventListener('click', () => {
     let addressarr = bucketList[key].ADDRESS.split("|");
 
 
-    console.log(addressarr[0]);
 
     let addressstr = "";
-    for(let i = 0 ; i<addressarr.length; i++){
-      addressstr+=`<h6>${addressarr[i]}</h6>`;
+    for (let i = 0; i < addressarr.length; i++) {
+      addressstr += `<h6>${addressarr[i]}</h6>`;
     }
-  accordionConstruct = `<div class="accordion-item" id="accordionHead${iter}">
-	<h2 class="accordion-header" id="flush-heading${iter}">
+    accordionConstruct = `<div class="accordion-item">
+	<h2 class="accordion-header" id="flushheading${iter}">
 		<button class="accordion-button collapsed text-dark" type="button"
 			data-bs-toggle="collapse" data-bs-target="#${iter}"
 			aria-expanded="false" aria-controls="${iter}">
@@ -619,46 +631,141 @@ MyList.addEventListener('click', () => {
 		</button>
 	</h2>
 	<div id="${iter}" class="accordion-collapse collapse"
-		aria-labelledby="${iter}" data-bs-parent="#mainList">
+		arialabelledby="${iter}" data-bs-parent="#mainList">
 		<div id="accordionContent" class="accordion-body">${addressstr}
 		</div>
 	</div>
 </div>`
 
-iter++;
-mainList.innerHTML += accordionConstruct;
+    iter++;
+    mainList.innerHTML += accordionConstruct;
 
-// if(mainList.innerHTML!=""){
 
-//   mainList.forEach(mainList => {
-//     mainList.addEventListener('click', () => {
-//       mainList.forEach(mainList => {
-//         mainList.classList.remove('active');
-//       });
-//       mainList.classList.add('active');
-//       let activeID = mainList.getAttribute('id');
-//       switch (activeID) {
-//         case 'MyList':
-//           document.getElementById('myListSection').scrollIntoView();
-//           clearInterval(intervalSearch);
-//           break;
-//         case 'Explore':
-//           document.getElementById('exploreSection').scrollIntoView();
-//           if (document.getElementById('searchInput') ? '' : addSearch());
-//           intervalSearch = setInterval(function () {
-//             if (document.getElementById('searchInput') ? '' : addSearch());
-//           }, 2000);
-//           break;
-//         default:
-//           intervalSearch = 2000;
-//       }
-//     });
-//   });
-// }
 
+   
+  }
+
+
+  let banner = document.getElementById("banner");
+  let travelList = document.getElementById("mainList");
+  let children = travelList.querySelectorAll("*");
+  let bucketArray = [];
+  let coords = [];
+  let pic = [];
+  let titles = [];
+  for (let key in bucketList) {
+    bucketArray.push(bucketList[key]);
+    coords.push(bucketList[key].COORDINATES);
+    titles.push(bucketList[key].TITLE);
+if(bucketList[key].PHOTOS[0]){
+  pic.push(bucketList[key].PHOTOS[0])
+}else{
+  pic.push("icons/nophotos.svg");
 }
+  }
+
+  for (let i = 0; i < children.length-1; i++) {
+    children[i].addEventListener("click", function () {
+      if (children[i].id != "") {
+        let len = children[i].id.length;
+        let n = children[i].id.slice(-1);
+        map.panTo(bucketArray[n].COORDINATES);
+        map.setZoom(13);
+        banner.style.backgroundImage = `url(${pic[n]})`;
+        
+        if(pic[n]==="icons/nophotos.svg"){
+          banner.innerHTML = ``;
+        }else{
+          banner.innerHTML = `<h1 class="p-2 position-absolute bg-white bottom-0 bg-opacity-75 fw-bold" id="bannerTitle"></h1>`;
+        const bannerTitle = document.getElementById("bannerTitle");
+        bannerTitle.innerHTML = titles[n];
+          
+        }
+
+
+
+
+      }
+    });
+  }
+
+  let options = {
+      zoom: 6,
+      center: coords[0],
+      draggable: false,
+      disableDefaultUI: true,
+      disableDoubleClickZoom: true,
+    }
+
+
+
+
+  map = new google.maps.Map(document.getElementById('map'), options);
+
+  coords.forEach(function (coordinate) {
+    let marker = new google.maps.Marker({
+      position: coordinate,
+      map: map
+    });
+  });
+
+
+
+
+
+try{
+  if(flushheading0){
+    document.getElementById("flushheading0").click();
+    map.panTo(coords[0]);
+    }
+}catch{
+      mainList.innerHTML=`<div class="d-flex flex-column justify-content-center align-items-center">
+      <br class="my-5 py-5">
+      <h1 class="text-center">List is looking empty...</h1>
+      <h3 class="text-center">let's do some exploration!</h3>
+      <button id="expBtn" class="col-2 text-white btn">Explore</button>`;
+      expBtn = document.getElementById("expBtn");
+
+      expBtn.addEventListener('click', function () {
+        Explore.click();
+        });
+      
+
+
+    }
+    
+
+
+
+
+
 
 
 });
 
 
+
+
+
+function loadMap() {
+  if (typeof google === 'object' && typeof google.maps === 'object') {
+      initMap();
+  } else {
+      setTimeout(loadMap, 100);
+  }
+}
+
+
+
+
+// window.onload = function () {
+//   window.scrollTo(0, 0);
+//  setTimeout(() => {
+//    try {
+//      satbtn[0].insertAdjacentElement('beforeend', template);
+//    } catch {
+//      initMap();
+//    }
+
+//  }, 2000);
+// };
