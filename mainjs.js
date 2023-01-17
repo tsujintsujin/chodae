@@ -41,10 +41,6 @@ let locExisting = false;
 
 
 
-expBtn.addEventListener('click', function () {
-  Explore.click();
-});
-
 
 function addSearch() {
   template = document.createElement('div');
@@ -76,11 +72,8 @@ listItems.forEach(listItem => {
       case 'MyList':
         document.getElementById('exploreSection').style.display = "none";
         document.getElementById('myListSection').style.display = "block";
-         closePreviousWindow();
+        closePreviousWindow();
         clearInterval(intervalSearch);
-
-
-
         break;
       case 'Explore':
         document.getElementById('exploreSection').style.display = "block";
@@ -101,7 +94,7 @@ listItems.forEach(listItem => {
 
 function deleteMarker() {
   currentMarker.setMap(null);
-  //remove marker from array
+
   try {
     delete userMarkers[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
     delete bucketList[`${currentMarker.position.lat()}, ${currentMarker.position.lng()}`];
@@ -110,34 +103,29 @@ function deleteMarker() {
   }
 }
 
-
-
-
-
 function checkDuplicate(userMarkers, map2, addbucket) {
-try{
-  let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
-  if (addbucket) {
-    for (let key in bucketList) {
-      if (latlngKey == key) {
-        locExisting = true;
-        console.log("existing in bucketlist");
+  try {
+    let latlngKey = global_latlng.lat + ", " + global_latlng.lng;
+    if (addbucket) {
+      for (let key in bucketList) {
+        if (latlngKey == key) {
+          locExisting = true;
+          console.log("existing in bucketlist");
+        }
       }
-    }
-  } else {
-    tobucket = false;
-    for (let key in userMarkers) {
-      if (latlngKey == key) {
-        locExisting = true;
-        console.log("existing in marker");
+    } else {
+      tobucket = false;
+      for (let key in userMarkers) {
+        if (latlngKey == key) {
+          locExisting = true;
+          console.log("existing in marker");
 
+        }
       }
     }
+  } catch {
+    let latlngKey = "";
   }
-}catch{
-  let latlngKey = "";
-}
-
 }
 
 
@@ -147,35 +135,25 @@ addtotravellist.addEventListener("click", function () {
   checkDuplicate(userMarkers, map2, true);
   if (!locExisting) {
     markThis(latlng, map2, true);
-    // mapMarker.classList.remove("btn-primary");
-    // mapMarker.classList.add("btn-danger");
     addtotravellist.disabled = true;
-    // addtotravellist.classList.remove("btn-primary");
     mapMarker.disabled = false;
     mapMarker.innerHTML = "Remove";
-
   }
 });
 
-// marker btn test
 mapMarker.addEventListener("click", function () {
   if (mapMarker.innerHTML === "Remove") {
     deleteMarker();
     closePreviousWindow();
-    // mapMarker.classList.remove("btn-danger");
     mapMarker.disabled = true;
     addtotravellist.disabled = true;
-    // addtotravellist.classList.remove("btn-primary");
     mapMarker.innerHTML = "Mark";
   } else {
-
     locExisting = false;
     checkDuplicate(userMarkers, map2, false);
     if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
       if (locExisting === false) {
         markThis(global_latlng, map2, tobucket);
-        // mapMarker.classList.remove("btn-primary");
-        // mapMarker.classList.add("btn-danger");
         mapMarker.disabled = false;
         mapMarker.innerHTML = "Remove";
       } else {
@@ -188,17 +166,11 @@ mapMarker.addEventListener("click", function () {
   }
 });
 
-
-
-
-
 function markThis(latlng, map2, tobucket) {
-
   let marker = new google.maps.Marker({
     zoom: 8,
     position: latlng,
     map: map2
-
   });
 
   currentMarker = marker;
@@ -228,7 +200,6 @@ function markThis(latlng, map2, tobucket) {
 
   placePhotos = [];
 
-
   marker.addListener('click', function () {
     closePreviousWindow();
     map2.panTo(latlng);
@@ -237,9 +208,9 @@ function markThis(latlng, map2, tobucket) {
     latlng = { lat: lat, lng: lng };
     global_latlng = latlng;
     let markerSelected = userMarkers[`${latlng.lat}, ${latlng.lng}`];
-    //  set up for marker
+
     locationTitle.innerHTML = markerSelected.TITLE;
-    // loop placeAddressArray
+
     let infoWindow = new google.maps.InfoWindow({
       content: markerSelected.TITLE
     });
@@ -249,7 +220,6 @@ function markThis(latlng, map2, tobucket) {
 
     changeWithMarkerContent(markerSelected);
     if (markerSelected.PHOTOS != 0) {
-
       changePhotos(markerSelected.PHOTOS);
     } else {
       carouselItem = `<div class="carousel-item rounded-2 active">
@@ -259,25 +229,20 @@ function markThis(latlng, map2, tobucket) {
     </div>`
       carouselItemContainer.innerHTML = carouselItem;
     }
+
     setStarSection(markerSelected.RATING, markerSelected.REVIEWS);
 
-    // mapMarker.classList.remove("btn-primary");
-    // mapMarker.classList.add("btn-danger");
     mapMarker.disabled = false;
     mapMarker.innerHTML = "Remove";
 
-
     checkDuplicate(userMarkers, map2, true);
-    if(locExisting){
+
+    if (locExisting) {
       console.log(locExisting);
       addtotravellist.disabled = true;
-      // addtotravellist.classList.remove("btn-primary");
-    }else{
-    // addtotravellist.classList.add("btn-primary");
-    addtotravellist.disabled = false;
+    } else {
+      addtotravellist.disabled = false;
     }
-   
-
   });
 }
 
@@ -290,16 +255,14 @@ function getPlaceData(geocodeData) {
   partTitle = document.getElementsByClassName("title");
   googleLabel = document.querySelectorAll('[jstcache="6"]');
 
-  //full address no id
   let placeAddressArray = geocodeData.formatted_address.split(", ");
 
-  //remove reference id if existing
   if (placeAddressArray[0].includes('+')) {
     placeAddressArray.splice(0, 1);
   }
 
   transitTitle = document.getElementsByClassName("transit-title")
-  // check for transit window
+
   if (transitTitle[1]) {
     Title = transitTitle[1].textContent;
   } else if (partTitle[0]) {
@@ -308,7 +271,6 @@ function getPlaceData(geocodeData) {
     // do nothing
   }
 
-  // remove all children of addressContainer for later setting of text
   if (Title.length != 0) {
     while (addressContainer.children.length > 1 && addressContainer.lastChild) {
       addressContainer.removeChild(addressContainer.lastChild);
@@ -328,17 +290,14 @@ function getPlaceData(geocodeData) {
           loc_addressHold += "|" + tempCheck;
         }
       }
-
-
     }
+
     loc_address = loc_addressHold.slice(1);
     loc_addressHold = "";
-
   }
+
   Title = "";
   if (googleLabel[0] ? googleLabel[0].remove() : '');
-
-
   try {
     loc_title = partTitle[0].textContent;
   } catch (e) {
@@ -348,7 +307,6 @@ function getPlaceData(geocodeData) {
       windowOpen = false;
     }
   }
-
   if (loc_title != "None selected" ? windowOpen = true : '');
   markerContent = "";
 }
@@ -402,11 +360,9 @@ function setStarSection(stars, rev) {
 
 function changeWithMarkerContent(markerSelected) {
   let addressArray = markerSelected.ADDRESS.split("|");
-
   while (addressContainer.children.length > 1 && addressContainer.lastChild) {
     addressContainer.removeChild(addressContainer.lastChild);
   }
-
   for (let i = 0; i < addressArray.length; i++) {
     let tempCheck = addressArray[i];
     let textNode = document.createElement('h5');
@@ -418,39 +374,37 @@ function changeWithMarkerContent(markerSelected) {
   document.getElementById("addressContainer").appendChild(hr);
 }
 
-  function initMap() {
-    // Map initial location 
-    let options = {
-      zoom: 8,
-      center: { lat: 7.356033977636596, lng: 125.85744918370949 },
-      draggable: false,
-      disableDefaultUI: true,
-      disableDoubleClickZoom: true,
-    }
-    let options2 = {
-      zoom: 12,
-      center: { lat: 7.5821144803226606, lng: 125.21624565124512 },
-      scrollwheel: true,
-      fullscreenControl: false,
-      disableDoubleClickZoom: true
-    }
-    // New maps
-    map = new google.maps.Map(document.getElementById('map'), options);
-    map2 = new google.maps.Map(document.getElementById('map2'), options2);
+function initMap() {
 
-    // for click on map
-    google.maps.event.addListener(map2, 'click', function (event) {
-
-      //for location clicks on map 
-      let lat = event.latLng.lat();
-      let lng = event.latLng.lng();
-      latlng = { lat: lat, lng: lng };
-      global_latlng = latlng;
-      geocoder = new google.maps.Geocoder;
-      mapShowLocationDetails(geocoder, latlng);
-      closePreviousWindow();
-    });
+  let options = {
+    zoom: 8,
+    center: { lat: 7.356033977636596, lng: 125.85744918370949 },
+    draggable: false,
+    disableDefaultUI: true,
+    disableDoubleClickZoom: true,
   }
+  let options2 = {
+    zoom: 12,
+    center: { lat: 7.5821144803226606, lng: 125.21624565124512 },
+    scrollwheel: true,
+    fullscreenControl: false,
+    disableDoubleClickZoom: true
+  }
+
+  map = new google.maps.Map(document.getElementById('map'), options);
+  map2 = new google.maps.Map(document.getElementById('map2'), options2);
+
+  google.maps.event.addListener(map2, 'click', function (event) {
+
+    let lat = event.latLng.lat();
+    let lng = event.latLng.lng();
+    latlng = { lat: lat, lng: lng };
+    global_latlng = latlng;
+    geocoder = new google.maps.Geocoder;
+    mapShowLocationDetails(geocoder, latlng);
+    closePreviousWindow();
+  });
+}
 
 function searchPan() {
   autocomplete.bindTo("bounds", map2);
@@ -505,10 +459,8 @@ function mapShowLocationDetails(geocoder, latlng) {
           }
         } else {
           console.log('No results found');
-
         }
       } else {
-
         console.log('Geocoder failed due to: ' + status);
       }
     })
@@ -608,7 +560,7 @@ MyList.addEventListener('click', () => {
 
   mainList.innerHTML = ""
 
- 
+
   let accordionConstruct = "";
 
   let iter = 0;
@@ -642,7 +594,7 @@ MyList.addEventListener('click', () => {
 
 
 
-   
+
   }
 
 
@@ -657,14 +609,14 @@ MyList.addEventListener('click', () => {
     bucketArray.push(bucketList[key]);
     coords.push(bucketList[key].COORDINATES);
     titles.push(bucketList[key].TITLE);
-if(bucketList[key].PHOTOS[0]){
-  pic.push(bucketList[key].PHOTOS[0])
-}else{
-  pic.push("icons/nophotos.svg");
-}
+    if (bucketList[key].PHOTOS[0]) {
+      pic.push(bucketList[key].PHOTOS[0])
+    } else {
+      pic.push("icons/nophotos.svg");
+    }
   }
 
-  for (let i = 0; i < children.length-1; i++) {
+  for (let i = 0; i < children.length - 1; i++) {
     children[i].addEventListener("click", function () {
       if (children[i].id != "") {
         let len = children[i].id.length;
@@ -672,14 +624,14 @@ if(bucketList[key].PHOTOS[0]){
         map.panTo(bucketArray[n].COORDINATES);
         map.setZoom(13);
         banner.style.backgroundImage = `url(${pic[n]})`;
-        
-        if(pic[n]==="icons/nophotos.svg"){
+
+        if (pic[n] === "icons/nophotos.svg") {
           banner.innerHTML = ``;
-        }else{
+        } else {
           banner.innerHTML = `<h1 class="p-2 position-absolute bg-white bottom-0 bg-opacity-75 fw-bold" id="bannerTitle"></h1>`;
-        const bannerTitle = document.getElementById("bannerTitle");
-        bannerTitle.innerHTML = titles[n];
-          
+          const bannerTitle = document.getElementById("bannerTitle");
+          bannerTitle.innerHTML = titles[n];
+
         }
 
 
@@ -690,12 +642,12 @@ if(bucketList[key].PHOTOS[0]){
   }
 
   let options = {
-      zoom: 6,
-      center: coords[0],
-      draggable: false,
-      disableDefaultUI: true,
-      disableDoubleClickZoom: true,
-    }
+    zoom: 6,
+    center: coords[0],
+    draggable: false,
+    disableDefaultUI: true,
+    disableDoubleClickZoom: true,
+  }
 
 
 
@@ -713,27 +665,27 @@ if(bucketList[key].PHOTOS[0]){
 
 
 
-try{
-  if(flushheading0){
-    document.getElementById("flushheading0").click();
-    map.panTo(coords[0]);
+  try {
+    if (flushheading0) {
+      document.getElementById("flushheading0").click();
+      map.panTo(coords[0]);
     }
-}catch{
-      mainList.innerHTML=`<div class="d-flex flex-column justify-content-center align-items-center">
+  } catch {
+    mainList.innerHTML = `<div class="d-flex flex-column justify-content-center align-items-center">
       <br class="my-5 py-5">
       <h1 class="text-center">List is looking empty...</h1>
       <h3 class="text-center">let's do some exploration!</h3>
       <button id="expBtn" class="col-2 text-white btn">Explore</button>`;
-      expBtn = document.getElementById("expBtn");
+    expBtn = document.getElementById("expBtn");
 
-      expBtn.addEventListener('click', function () {
-        Explore.click();
-        });
-      
+    expBtn.addEventListener('click', function () {
+      Explore.click();
+    });
 
 
-    }
-    
+
+  }
+
 
 
 
@@ -745,13 +697,16 @@ try{
 
 
 
+expBtn.addEventListener('click', function () {
+  Explore.click();
+});
 
 
 function loadMap() {
   if (typeof google === 'object' && typeof google.maps === 'object') {
-      initMap();
+    initMap();
   } else {
-      setTimeout(loadMap, 100);
+    setTimeout(loadMap, 100);
   }
 }
 
