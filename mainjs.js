@@ -756,16 +756,3 @@ function loadMap() {
 }
 
 
-
-
-// window.onload = function () {
-//   window.scrollTo(0, 0);
-//  setTimeout(() => {
-//    try {
-//      satbtn[0].insertAdjacentElement('beforeend', template);
-//    } catch {
-//      initMap();
-//    }
-
-//  }, 2000);
-// };

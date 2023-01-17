@@ -2,12 +2,26 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
+  <!-- <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+
+  <link rel="stylesheet" href="maincss.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+  
+ -->
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <link rel="stylesheet" href="maincss.css">
@@ -17,6 +31,300 @@
 </head>
 
 <body>
+  <div class="vh-100">
+    <section class="row h-100 text-end d-flex" style="background-image: url(images/head.jpg);">
+      <nav class="navbar">
+        <div class="container">
+          <a class="navbar-brand" href="#">
+            <img src="icons/chodae-white.png" height="70"/> 
+          </a>
+        </div>
+      </nav>
+      <div class="header-content">
+        
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-4 text-white bg-dark bg-opacity-50 m-5 p-5">
+            <h1 class="fw-bold">Your online travel bucket-list</h1>
+            <h5>The journey of a thousand miles begins with a single step.</h5>
+            <h5>Explore • Save • Travel</h5>
+            <button class="btn-lg btn" onclick="window.location.href='app.html'">App Section</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="vh-100 d-flex align-items-center">
+    <div class="row p-5">
+      <div class="col-8 ps-5">
+        <div id="myCarousel" class="carousel slide" data-mdb-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active ">
+              <div class="d-flex justify-content-between">
+                <img src="images/c1.jpg" class="d-block mx-auto d-block rounded-5" />
+                <img src="images/c2.jpg" class="d-block mx-auto d-block rounded-5" />
+                <img src="images/c3.jpg" class="d-block mx-auto d-block rounded-5" />
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="d-flex justify-content-between">
+                <img src="images/c4.jpg" class="d-block mx-auto d-block rounded-5" />
+                <img src="images/c5.jpg" class="d-block mx-auto d-block rounded-5" />
+                <img src="images/c6.jpg" class="d-block mx-auto d-block rounded-5" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 pe-5 text-end position-relative">
+        <h1 class="big-font fw-bold"> Your Travel Bucket-list, Available Anytime & Anywhere. </h1>
+
+        <div class="mt-auto position-absolute bottom-0 m-5">
+          <button class="btn bg-opacity-50 rounded-circle m-1" type="button" data-bs-target="#myCarousel"
+            data-bs-slide="prev">
+            <span class="fs-1">🡠</span>
+          </button>
+          <button class="btn bg-opacity-50 rounded-circle m-1" type="button" data-bs-target="#myCarousel"
+            data-bs-slide="next">
+            <span class="fs-1">🡢</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="vh-100 section-features">
+    <div class="m-5 p-5 text-center">
+      <img class="mb-3" src="icons/chodae.png" height="50"/> 
+      <hr class="hr hr-blurry mt-5" />
+    </div>
+    <div id="sec2background">
+      <div class="container px-4 ">
+        <div class="row gx-5 m-5">
+          <div class="col">
+            <div class="shadow-lg p-4 card mb-3" style="max-width: 35rem; ">
+              <div class="row">
+                <div class="col-3 card-1 card-ico my-4 align-items-center justify-content-center d-flex">
+                  <img src="icons/free.png" class="h-75">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <div class="fs-5 pt-0 ms-3">
+                    <h4><b>Free to use</b></h4>
+                  </div>
+                  <div class="text-muted ms-3">
+                    <h6>Feel free to use the aplication anytime.</h6>
+                  </div><br>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="shadow-lg p-4 card  mb-3" style="max-width: 35rem;">
+              <div class="row">
+                <div class="col-3 card-2 card-ico my-4 align-items-center justify-content-center d-flex">
+                  <img src="icons/maps.png" class="h-75">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <div class="fs-5 pt-0 ms-3">
+                    <h4><b>Explore with Google Maps</b></h4>
+                  </div>
+                  <div class="text-muted ms-3">
+                    <h6>Get to see and nearby location <br>before you set up your travel plan</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row gx-5 m-5">
+          <div class="col">
+            <div class=" shadow-lg p-4 card  mb-3" style="max-width: 35rem;">
+              <div class="row">
+                <div class="col-3 card-3 card-ico my-4 align-items-center justify-content-center d-flex">
+                  <img src="icons/street.png" class="h-75">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <div class="fs-5 pt-0 ms-3">
+                    <h4><b>Map Street View</b></h4>
+                  </div>
+                  <div class="text-muted ms-3">
+                    <h6>See those streets and buildings in <br>advance with Google map.</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class=" shadow-lg p-4 card  mb-3" style="max-width: 35rem;">
+              <div class="row">
+                <div class="col-3 card-4 card-ico my-4 align-items-center justify-content-center d-flex">
+                  <img src="icons/bucket.png" class="h-75">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <div class="fs-5 pt-0 ms-3">
+                    <h4><b>Check routes</b></h4>
+                  </div>
+                  <div class="text-muted ms-3">
+                    <h6>Don't get lost! <br>Check out those streets in advance!</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row gx-5 m-5">
+          <div class="col">
+            <div class=" shadow-lg p-4 card  mb-3" style="max-width: 35rem;">
+              <div class="row">
+                <div class="col-3 card-5 card-ico my-4 align-items-center justify-content-center d-flex">
+                  <img src="icons/search.png" class="h-75">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <div class="fs-5 pt-0 ms-3">
+                    <h4><b>Search establishments</b></h4>
+                  </div>
+                  <div class="text-muted ms-3">
+                    <h6>Find registered businesses and <br>locations in the Google map.</h6>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="col">
+            <div class=" shadow-lg p-4 card  mb-3" style="max-width: 35rem;">
+              <div class="row">
+                <div class="col-3 card-6 card-ico my-4 align-items-center justify-content-center d-flex">
+                  <img src="icons/backg.png" class="h-75">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <div class="fs-5 pt-0 ms-3">
+                    <h4><b>Get a view of the location</b></h4>
+                  </div>
+                  <div class="text-muted ms-3">
+                    <h6>Photos uploaded by travelers <br>are available just for you!</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="vh-100 bg-section-4">
+  <section id="section4">
+    <h1 class="text-center my-5 fw-bold">Explore the world with <img class="mb-1" src="icons/chodae.png" height="25"/></h1>
+    <div class="d-flex justify-content-around">
+      <img src="images/b1.jpg">
+      <img src="images/b2.jpg">
+      <img src="images/b3.jpg">
+      <img src="images/b4.jpg">
+      <img src="images/b5.jpg">
+      <img src="images/b6.jpg">
+    </div>
+  </section>
+</section>
+
+
+<section class="our-team vh-100 d-flex align-items-center">
+  <div class="container">
+    <div class="text-center mb-5">
+    <h1 class="fw-bold">Need assistance? Contact us.</h1>
+    <h5>Servicing you is a pleasure to us. Message us through facebook anytime. </h5>
+    <h5>We will be happy to answer you!</h5>
+  </div>
+  <hr class="hr hr-blurry mt-5" />
+
+
+    <div class="pt-5 mt-5 row row-cols-1 row-cols-lg-5 row-cols-md-3 row-cols-sm-1 g-4  d-flex justify-content-evenly">
+      <div class="col" style="cursor: pointer;" onclick="window.location.href='https://www.facebook.com/tsujiiin/'">
+        <div class="shadow-3-strong h-100 position-relative p-3 ">
+          <img
+            src="team/jin.jpg"
+            class="card-img-top rounded-circle p-3 border-1 border" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-bold" >Justin M</h5>
+          </div>
+          <div class="card-footer bg-white border-0 text-center">
+            <small class="text-muted cursor-pointer">
+              <i class="mt-3 fa fa-facebook mx-2 text-dark fs-5"></i>
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="cursor: pointer;" onclick="window.location.href='https://www.facebook.com/chrisjhovin.cabral.1/'">
+        <div class="shadow-3-strong h-100 position-relative p-3">
+          <img
+            src="team/chris.jpg"
+            class="card-img-top rounded-circle p-3 border-1 border" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-bold">Chris C</h5>
+          </div>
+          <div class="card-footer bg-white border-0 text-center">
+            <small class="text-muted cursor-pointer ">
+              <i class="mt-3 fa fa-facebook mx-2 text-dark fs-5"></i>
+
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="cursor: pointer;" onclick="window.location.href='https://www.facebook.com/shifortuno/'">
+        <div class="shadow-3-strong h-100 position-relative p-3">
+          <img
+            src="team/ron.jpg"
+            class="card-img-top rounded-circle p-3 border-1 border" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-bold">Shirone F</h5>
+          </div>
+          <div class="card-footer bg-white border-0 text-center">
+            <small class="text-muted cursor-pointer ">
+              <i class="mt-3 fa fa-facebook mx-2 text-dark fs-5"></i>
+
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="cursor: pointer;" onclick="window.location.href='https://www.facebook.com/OnlineRakitero26/'">
+        <div class="shadow-3-strong h-100 position-relative p-3">
+          <img
+            src="team/jerome.jpg"
+            class="card-img-top rounded-circle p-3 border-1 border" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title fw-bold">Jerome P</h5>
+          </div>
+          <div class="card-footer bg-white border-0 text-center">
+            <small class="text-muted">
+              <i class="mt-3 fa fa-facebook mx-2 text-dark fs-5"></i>
+
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<footer class="vh-25 bg-white text-center my-5">
+    <div class="container">
+      <h6>Group 2 | 2023</h6>
+        <span class="navbar-text fs-6">
+          <img src="icons/chodae.png" height="30"/>
+        </span>
+    </div>
+</footer>
 
 
 
@@ -33,40 +341,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
   <script src="mainjs.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
