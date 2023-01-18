@@ -1,5 +1,4 @@
 const listItems = document.querySelectorAll('nav .nav-item');
-const API_KEY = 'AIzaSyClso5DVSDxgLPUu3FwxdmhHHZEyu1hoj4';
 let map, map2;
 let lati, longi, loc_title, loc_addressHold = "", loc_address, geocoder, titleDisplay, placeId, Title;
 let satbtn, input, intervalSearch;
@@ -39,9 +38,6 @@ let bucketList = {};
 let addbucket = false;
 let locExisting = false;
 
-
-
-
 function addSearch() {
   template = document.createElement('div');
   template.classList.add("gm-style-mtc", "d-flex", "d-flex");
@@ -59,7 +55,6 @@ function addSearch() {
   autocomplete = new google.maps.places.Autocomplete(input, opts);
   searchPan();
 }
-
 
 listItems.forEach(listItem => {
   listItem.addEventListener('click', () => {
@@ -90,7 +85,6 @@ listItems.forEach(listItem => {
     }
   });
 });
-
 
 function deleteMarker() {
   currentMarker.setMap(null);
@@ -127,7 +121,6 @@ function checkDuplicate(userMarkers, map2, addbucket) {
     let latlngKey = "";
   }
 }
-
 
 addtotravellist.addEventListener("click", function () {
   tobucket = true;
@@ -246,7 +239,6 @@ function markThis(latlng, map2, tobucket) {
   });
 }
 
-
 function getPlaceData(geocodeData) {
   Title = '';
   let titleNode = document.createElement('h3');
@@ -311,7 +303,6 @@ function getPlaceData(geocodeData) {
   markerContent = "";
 }
 
-
 function setStarSection(stars, rev) {
 
   let starLinePref = `<h5 id="starNumber" class="mt-1 me-2">${stars}</h5>`;
@@ -356,7 +347,6 @@ function setStarSection(stars, rev) {
   starSection.innerHTML = "";
   starSection.innerHTML = starLinePref;
 }
-
 
 function changeWithMarkerContent(markerSelected) {
   let addressArray = markerSelected.ADDRESS.split("|");
@@ -419,18 +409,18 @@ function searchPan() {
       window.alert("No details available for input: '" + place.name + "'");
       return;
     }
-
     if (place.geometry.viewport) {
       map2.fitBounds(place.geometry.viewport);
+
     } else {
       map2.setCenter(place.geometry.location);
       map2.setZoom(12);
     }
+
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
   });
 }
-
 
 function mapShowLocationDetails(geocoder, latlng) {
   geocoder.geocode({ 'location': latlng },
@@ -443,16 +433,10 @@ function mapShowLocationDetails(geocoder, latlng) {
           getPlaceData(results[0]);
           if (windowOpen && results[0]) {
             getService(placeId);
-            // mapMarker.classList.add("btn-primary");
-            // mapMarker.classList.remove("btn-danger");
-            // addtotravellist.classList.add("btn-primary");
             mapMarker.disabled = false;
             addtotravellist.disabled = false;
             mapMarker.innerHTML = "Mark";
           } else {
-            // mapMarker.classList.remove("btn-danger");
-            // mapMarker.classList.remove("btn-primary");
-            // addtotravellist.classList.remove("btn-primary");
             mapMarker.innerHTML = "Mark";
             mapMarker.disabled = true;
             addtotravellist.disabled = true;
@@ -466,13 +450,11 @@ function mapShowLocationDetails(geocoder, latlng) {
     })
 }
 
-
 function removeCarouselItems() {
   while (carouselItemContainer.hasChildNodes()) {
     carouselItemContainer.removeChild(carouselItemContainer.firstChild);
   }
 }
-
 
 function collectPhotoUrl(photos) {
   placePhotos = [];
@@ -483,7 +465,6 @@ function collectPhotoUrl(photos) {
   }
   changePhotos(placePhotos);
 }
-
 
 function changePhotos(photos) {
   removeCarouselItems();
@@ -500,7 +481,6 @@ function changePhotos(photos) {
     i++;
   }
 }
-
 
 function getService(placeId) {
   removeCarouselItems();
@@ -541,12 +521,6 @@ function getService(placeId) {
   });
 }
 
-
-
-
-
-
-
 function closePreviousWindow() {
   if (document.querySelectorAll('[class="gm-ui-hover-effect"]')[0]) {
     winClose = document.querySelectorAll('[class="gm-ui-hover-effect"]')[0].click()
@@ -557,23 +531,19 @@ function closePreviousWindow() {
 MyList.addEventListener('click', () => {
 
   let mainList = document.getElementById('mainList');
-
   mainList.innerHTML = ""
-
-
   let accordionConstruct = "";
-
   let iter = 0;
+
   for (let key in bucketList) {
 
     let addressarr = bucketList[key].ADDRESS.split("|");
-
-
-
     let addressstr = "";
+
     for (let i = 0; i < addressarr.length; i++) {
       addressstr += `<h6>${addressarr[i]}</h6>`;
     }
+
     accordionConstruct = `<div class="accordion-item">
 	<h2 class="accordion-header" id="flushheading${iter}">
 		<button class="accordion-button collapsed text-dark" type="button"
@@ -591,12 +561,7 @@ MyList.addEventListener('click', () => {
 
     iter++;
     mainList.innerHTML += accordionConstruct;
-
-
-
-
   }
-
 
   let banner = document.getElementById("banner");
   let travelList = document.getElementById("mainList");
@@ -627,16 +592,12 @@ MyList.addEventListener('click', () => {
 
         if (pic[n] === "icons/nophotos.svg") {
           banner.innerHTML = ``;
+
         } else {
           banner.innerHTML = `<h1 class="p-2 position-absolute bg-white bottom-0 bg-opacity-75 fw-bold" id="bannerTitle"></h1>`;
           const bannerTitle = document.getElementById("bannerTitle");
           bannerTitle.innerHTML = titles[n];
-
         }
-
-
-
-
       }
     });
   }
@@ -649,21 +610,13 @@ MyList.addEventListener('click', () => {
     disableDoubleClickZoom: true,
   }
 
-
-
-
   map = new google.maps.Map(document.getElementById('map'), options);
-
   coords.forEach(function (coordinate) {
     let marker = new google.maps.Marker({
       position: coordinate,
       map: map
     });
   });
-
-
-
-
 
   try {
     if (flushheading0) {
@@ -681,26 +634,12 @@ MyList.addEventListener('click', () => {
     expBtn.addEventListener('click', function () {
       Explore.click();
     });
-
-
-
   }
-
-
-
-
-
-
-
-
 });
-
-
 
 expBtn.addEventListener('click', function () {
   Explore.click();
 });
-
 
 function loadMap() {
   if (typeof google === 'object' && typeof google.maps === 'object') {

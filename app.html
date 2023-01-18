@@ -20,19 +20,19 @@
 <body class="app-body">
     <header>
         <div class="row container">
-            <div class="position-fixed vh-100 col-lg-2 bg-main shadowx">
+            <div class="position-fixed vh-100 col-3 col-md-2 bg-main shadowx">
                 <div class="row d-flex flex-column align-items-center">
-                    <nav class="row navi vh-100 d-flex flex-column">
+                    <nav class="row navi vh-100 d-flex flex-column nav ">
                         <div class="row">
-                            <div class="col-12 p-0 m-0 container-fluid my-5 py-5 ps-2">
-                                <img class="w-100" style="cursor:pointer;" src="icons/chodae-white.png" onclick="window.location.href='index.html'">
+                            <div class="col-lg-12 p-0 m-0 container-fluid my-5 py-5 ps-2">
+                                <img class="w-100 ps-3" style="cursor:pointer;" src="icons/chodae-white.png" onclick="window.location.href='index.html'">
 
                             </div>
                         </div>
                         <hr class="my-3">
                         <ul>
                             <li id="MyList" class="ps-2 nav-item my-2 py-2 w-100 rounded-2 active">
-                                <h6><i class="fa-center me-2 fa fa-edit ps-2"></i>My List</h6>
+                                <h6><i class="fa-center me-2 fa fa-edit ps-2"> </i>My List</h6>
                             </li>
                             <li id="Explore" class="ps-2 nav-item my-2 py-2 w-100 rounded-2">
                                 <h6><i class="fa-center me-2 fa fa-compass ps-2"></i>Explore</h6>
@@ -45,10 +45,10 @@
     </header>
 
 
-    <div class="row mx-5 px-5">
+    <div class="row mx-5 px-5 container-fluid">
         <div class="col-2">
         </div>
-        <div class="col-10">
+        <div class="col-9">
             <section id="myListSection" class="content-section vh-100 w3-animate-top ">
                 <div class="container-fluid vh-100 py-3">
                     <div class="row vh-25 rounded-2 position-relative border border-2" id="banner"
@@ -56,7 +56,7 @@
 
                     </div>
                     <div class="row vh-25 vh-75 ">
-                        <div class="col  me-3 mt-3 p-2 border-2 border rounded-2">
+                        <div class="col-12 col-md-6 me-3 mt-3 p-2 border-2 border rounded-2">
                             <h3 class="fw-bold">My Travel List</h3>
 
                             <section class="accordion accordion-flush " id="mainList">
@@ -65,7 +65,7 @@
                                     <h1 class="text-center">List is looking empty...</h1>
                                     <h3 class="text-center">let's do some exploration!</h3>
                                     <button id="expBtn"
-                                        class="col-2 btn">Explore</button>
+                                        class="col-5 col-md-4 col-lg-5 btn">Explore</button>
                                 </div>
                             </section>
                         </div>
@@ -80,8 +80,8 @@
             <section id="exploreSection" class="content-section vh-100 w3-animate-bottom" style="display:none;">
                 <div class="container-fluid bg-opacity-50 vh-100 py-3 ">
                     <div class="row h-100">
-                        <div class="col me-3">
-                            <div class="row vh-50">
+                        <div class="col-lg-6 me-3">
+                            <div class="row vh-50 carouselcontainer">
                                 <div id="myCarousel" class="carousel slide p-0 m-0 rounded-2" data-bs-ride="carousel">
                                     <div class="btn-carousel-container">
                                         <div class="mt-auto">
@@ -124,7 +124,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col p-0">
+                        <div class="col-lg-6 p-0">
                             <div class="h-100 w-100 rounded-2 shadowx" id="map2">
                             </div>
                         </div>

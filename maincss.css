@@ -180,6 +180,10 @@ a {
 }
 
 
+
+
+
+
 .btn-carousel-container {
     position: absolute;
     z-index: 15;
@@ -270,3 +274,32 @@ a {
     border-color: #943A6F;
     border-width: 4px;
 }
+
+
+@media (max-width: 600px) {
+    .img-fit, .carousel, .carouselcontainer  
+    {
+        height: 20.5vh;
+    }
+  }
+
+  @media (min-width: 601) {
+    .img-fit, .carousel, .carouselcontainer  
+    {
+        height: 30.5vh;
+    }
+  } 
+  @media (min-width: 901) {
+    .img-fit, .carousel, .carouselcontainer  
+    {
+        height: 48.5vh;
+    }
+  }
+
+
+  @media (max-width: 600px) {
+    .header-content  
+    {
+        top: 75;
+    }
+  }
